@@ -1,0 +1,412 @@
+body{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://images.unsplash.com/photo-1529900748604-07564a03e7a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+    overflow-x:hidden ;
+  }
+  h1 {
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+.edo{
+    position: relative;
+    text-align: center;
+    top: 90px;
+    padding: 15px;
+}
+.re{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    padding: 15px;
+    margin: 15px;
+}
+.ree{
+    font-family:'Courier New', Courier, monospace;
+    font-size: 20px;
+    padding: 15px;
+    margin: 15px; 
+    position: relative;
+    top: 20px;
+}
+.btn1{
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background-color: rgb(62, 212, 62);
+    color: white;
+    font-family:sans-serif;
+    position: relative;
+    top: 50px;
+}
+.btn1:hover{
+    line-height: 15px;
+    background-color: rgb(28, 195, 28);
+}
+  .com1{
+    width: 100%;
+    display: flex;
+    gap: 80px;
+    position: relative;
+    left: 30px;
+    
+  }  
+  .im1{
+    width: 148px;
+  }
+
+  .btnn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background-color: rgb(62, 212, 62);
+    color: white;
+    font-family: sans-serif;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+.btnn:hover {
+    background-color: rgb(28, 195, 28);
+    transform: scale(1.05);
+}
+
+.p1 {
+    width: 80%;
+    font-family: 'Times New Roman', Times, serif;
+    margin: 10px 0;
+    font-size: 15px;
+    position: relative;
+    left: 25px;
+    
+}
+
+.com1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.com1 > div {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    max-width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.com1 > div:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.im1 {
+    width: 100%;
+    height:350px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2d2929; /* Vert pour rappeler le gazon */
+    border: 2px solid #fff; /* Bordure blanche pour rappeler les lignes */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+    color: white;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.modal form {
+    width: 100%;
+    position: relative;
+    left: 50px;
+}
+
+.modal form div {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.modal label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.modal input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: #4caf50; /* Légèrement plus clair pour le contraste */
+    color: white;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    right: 70px;
+    top: 14px;
+    gap: 20px;
+    width: 100%;
+}
+
+.btn-ajt, .btn-annuler {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-ajt {
+    background-color: #388e3c; /* Vert foncé pour le bouton d'action */
+    color: white;
+}
+
+.btn-ajt:hover {
+    background-color: #2e7d32;
+}
+
+.btn-annuler {
+    background-color: #d32f2f; /* Rouge pour le bouton d'annulation */
+    color: white;
+}
+
+.btn-annuler:hover {
+    background-color: #c62828;
+}
+
+.modal select {
+    width: 74%;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: #4caf50; /* Légèrement plus clair pour le contraste */
+    color: white;
+    font-family: sans-serif;
+    appearance: none; /* Supprime le style par défaut du navigateur */
+    -webkit-appearance: none; /* Pour Safari */
+    -moz-appearance: none; /* Pour Firefox */
+    cursor: pointer;
+}
+
+.modal select:focus {
+    outline: none;
+    border-color: #388e3c; /* Couleur de bordure lors de la mise au point */
+}
+
+.modal option {
+    background-color: #2e7d32; /* Couleur de fond des options */
+    color: white;
+}
+.table-container {
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    max-width: 95%;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: rgba(31, 192, 13, 0.8);
+}
+
+th {
+    padding: 12px;
+    color: rgb(255, 255, 255);
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+tbody {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    font-size: 1rem;
+    color: white;
+}
+.btn2 {
+  border: none;
+  background-color: red; /* Force la transparence */
+  cursor: pointer;
+  top: 10px;
+  margin: 0 5px;
+  transition: transform 0.2s ease-in-out;
+}
+
+
+
+/* Empêcher tout changement de fond au hover */
+.btn2:hover {
+  background-color: transparent !important;
+  transform: scale(1.1); /* Effet de zoom léger */
+}
+
+.btn2:first-of-type svg {
+  width: 26px;  
+  height: 26px;
+  color: rgb(25, 253, 25);
+}
+.btn2:last-of-type svg {
+  width: 24px;
+  height: 22px;
+  color: red;
+}
+@media (max-width: 780px) {
+  .table-container {
+      padding: 8px;
+  }
+
+  th, td {
+      font-size: 0.8rem;
+      padding: 8px;
+  }
+
+  .nav a {
+      font-size: 0.9rem;
+  }
+}
+.btn {
+    background-color: #ff4136; /* Rouge vif */
+    color: white;
+    border: none;
+    padding: 10px 20px; /* Taille réduite pour un bouton de taille moyenne */
+    font-size: 0.9rem; /* Police de taille moyenne */
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: inline-block; /* Aligner avec d'autres éléments inline */
+    margin: 10px;
+}
+
+/* Hover effect */
+.btn:hover {
+    background-color: #e03131; /* Rouge plus foncé */
+    transform: translateY(-2px); /* Léger soulèvement */
+}
+
+.confirmation-message {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50; /* Vert pour indiquer le succès */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-size: 1rem;
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+    margin-top: 20px;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+}
+
+.confirmation-message.fade-out {
+    opacity: 0;
+}
+
+.terrain-detail {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.terrain-detail h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.terrain-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+.terrain-detail p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.btn-reserve {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #388e3c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-reserve:hover {
+    background-color: #2e7d32;
+    transform: scale(1.05);
+}
+
+
+
