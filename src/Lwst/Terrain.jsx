@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function Terrain({ addReservation }) {
+function Terrain({ addReservation, reservations }) {
     const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -10,6 +10,7 @@ function Terrain({ addReservation }) {
         timeSlot: ''
     });
     const [confirmationMessage, setConfirmationMessage] = useState('');
+    const [selectedTerrain, setSelectedTerrain] = useState(null);
 
     const terr = [
         {  
@@ -32,12 +33,14 @@ function Terrain({ addReservation }) {
         }
     ];
 
-    const handleReserveClick = () => {
+    const handleReserveClick = (terrainId) => {
+        setSelectedTerrain(terrainId);
         setIsReservationModalOpen(true);
     };
 
     const handleCloseReservationModal = () => {
         setIsReservationModalOpen(false);
+        setSelectedTerrain(null);
     };
 
     const handleChange = (e) => {
@@ -50,10 +53,25 @@ function Terrain({ addReservation }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        const conflict = reservations.some(reservation =>
+            reservation.terrainId === selectedTerrain &&
+            reservation.date === formData.date &&
+            reservation.timeSlot === formData.timeSlot
+        );
+
+        if (conflict) {
+            setConfirmationMessage('Une réservation existe déjà pour cette date et heure.');
+            setTimeout(() => {
+                setConfirmationMessage('');
+            }, 5000);
+            return;
+        }
+
         const newReservation = {
-            id: Date.now(), // Simple unique ID
-            ...formData,
-            accepted: false
+            id: Date.now(),
+            terrainId: selectedTerrain,
+            ...formData
         };
         addReservation(newReservation);
         setIsReservationModalOpen(false);
@@ -61,12 +79,22 @@ function Terrain({ addReservation }) {
         setConfirmationMessage('Votre réservation a été enregistrée. Veuillez attendre la réponse de l\'administrateur.');
         
         setTimeout(() => {
-            document.querySelector('.confirmation-message').classList.add('fade-out');
-            setTimeout(() => setConfirmationMessage(''), 500); // Efface le message après 0.5 secondes supplémentaires
-        }, 4500); // Commence à disparaître après 4.5 secondes
+            setConfirmationMessage('');
+        }, 5000);
     };
 
     const today = new Date().toISOString().split('T')[0];
+
+    const timeSlots = [
+        "09:00-10:00", "10:00-11:00", "11:00-12:00",
+        "15:00-16:00", "16:00-17:00", "17:00-18:00",
+        "18:00-19:00", "19:00-20:00", "20:00-21:00",
+        "21:00-22:00"
+    ];
+
+    const reservedSlots = selectedTerrain ? reservations
+        .filter(reservation => reservation.terrainId === selectedTerrain && reservation.date === formData.date)
+        .map(reservation => reservation.timeSlot) : [];
 
     return (
         <div>
@@ -79,7 +107,7 @@ function Terrain({ addReservation }) {
                         </Link>
                         <h1>{e.Title}</h1>
                         <p className='p1'>{e.description}</p>
-                        <button className='btnn' onClick={handleReserveClick}>Reserver Maintenant</button>
+                        <button className='btnn' onClick={() => handleReserveClick(e.id)}>Reserver Maintenant</button>
                     </div>
                 ))}
             </div>
@@ -111,16 +139,11 @@ function Terrain({ addReservation }) {
                                 <label>Plage Horaire:</label>
                                 <select name="timeSlot" value={formData.timeSlot} onChange={handleChange} required>
                                     <option value="" disabled>Choisir une heure</option>
-                                    <option value="09:00-10:00">09:00 - 10:00</option>
-                                    <option value="10:00-11:00">10:00 - 11:00</option>
-                                    <option value="11:00-12:00">11:00 - 12:00</option>                                 
-                                    <option value="15:00-16:00">15:00 - 16:00</option>
-                                    <option value="16:00-17:00">16:00 - 17:00</option>
-                                    <option value="17:00-18:00">17:00 - 18:00</option>
-                                    <option value="18:00-19:00">18:00 - 19:00</option>
-                                    <option value="19:00-20:00">19:00 - 20:00</option>
-                                    <option value="20:00-21:00">20:00 - 21:00</option>
-                                    <option value="21:00-22:00">21:00 - 22:00</option>
+                                    {timeSlots.map(slot => (
+                                        <option key={slot} value={slot} disabled={reservedSlots.includes(slot)}>
+                                            {reservedSlots.includes(slot) ? `${slot} (Réservé)` : slot}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="modal-actions">

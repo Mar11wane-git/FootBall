@@ -52,8 +52,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/accueil" />} />
         <Route path="accueil" element={<Accueil/>}/>
-        <Route path="terrain" element={<Terrain addReservation={addReservation}/>}/>
-        <Route path="terrain/:id" element={<TerrainDetail terrains={terrains} />} />
+        <Route path="terrain" element={<Terrain addReservation={addReservation} reservations={reservations}/>}/>
+        <Route path="terrain/:id" element={<TerrainDetail terrains={terrains} addReservation={addReservation} reservations={reservations} />} />
         <Route path="Reservation" element={<Reservation reservations={reservations} deleteReservation={deleteReservation} acceptReservation={acceptReservation}/>}/>
         <Route path="Contact" element={<Contact/>}/>
        
