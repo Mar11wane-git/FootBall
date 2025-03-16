@@ -34,7 +34,7 @@ function Terrain({ addReservation, reservations }) {
     ];
 
     const handleReserveClick = (terrainId) => {
-        setSelectedTerrain(terrainId);
+        setSelectedTerrain(terr.find(t => t.id === terrainId));
         setIsReservationModalOpen(true);
     };
 
@@ -55,7 +55,7 @@ function Terrain({ addReservation, reservations }) {
         e.preventDefault();
         
         const conflict = reservations.some(reservation =>
-            reservation.terrainId === selectedTerrain &&
+            reservation.terrainId === selectedTerrain.id &&
             reservation.date === formData.date &&
             reservation.timeSlot === formData.timeSlot
         );
@@ -70,7 +70,7 @@ function Terrain({ addReservation, reservations }) {
 
         const newReservation = {
             id: Date.now(),
-            terrainId: selectedTerrain,
+            terrainId: selectedTerrain.id,
             ...formData
         };
         addReservation(newReservation);
@@ -93,24 +93,28 @@ function Terrain({ addReservation, reservations }) {
     ];
 
     const reservedSlots = selectedTerrain ? reservations
-        .filter(reservation => reservation.terrainId === selectedTerrain && reservation.date === formData.date)
+        .filter(reservation => reservation.terrainId === selectedTerrain.id && reservation.date === formData.date)
         .map(reservation => reservation.timeSlot) : [];
 
     return (
         <div>
-            <h1>Terrain Disponible</h1>
-            <div className='com1'>
-                {terr.map((e) => (
-                    <div key={e.id}>
+            <h1>Terrains Disponibles</h1>
+        <div className="container">
+            
+            {terr.map((e) => (
+                <div key={e.id} className="terrain">
+                    <Link to={`/terrain/${e.id}`}>
+                        <img src={e.photo} alt={e.Title} className='im1' />
+                    </Link>
+                    <div className="terrain-content">
+                        <h3>{e.Title}</h3>
+                        <p>{e.description}</p>
                         <Link to={`/terrain/${e.id}`}>
-                            <img src={e.photo} alt={e.Title} className='im1' />
+                            <button className='btnn'>Voir Détail</button>
                         </Link>
-                        <h1>{e.Title}</h1>
-                        <p className='p1'>{e.description}</p>
-                        <button className='btnn' onClick={() => handleReserveClick(e.id)}>Reserver Maintenant</button>
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
 
             {confirmationMessage && (
                 <div className="confirmation-message">
@@ -118,10 +122,10 @@ function Terrain({ addReservation, reservations }) {
                 </div>
             )}
 
-            {isReservationModalOpen && (
+            {isReservationModalOpen && selectedTerrain && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h2>Réserver un Terrain</h2>
+                        <h2>Réserver {selectedTerrain.Title}</h2>
                         <form onSubmit={handleSubmit}>
                             <div>
                                 <label>Nom:</label>
@@ -154,6 +158,7 @@ function Terrain({ addReservation, reservations }) {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }

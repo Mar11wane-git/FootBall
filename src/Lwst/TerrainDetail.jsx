@@ -84,13 +84,14 @@ function TerrainDetail({ terrains, addReservation, reservations }) {
             <h1>{terrain.Title}</h1>
             <img src={`/${terrain.photo}`} alt={terrain.Title} className="terrain-image" />
             <p>{terrain.description}</p>
+            <p>Ce terrain est équipé de vestiaires modernes, d'un éclairage LED pour les matchs nocturnes, et d'un système de drainage avancé pour garantir des conditions de jeu optimales même après la pluie. Idéal pour les tournois et les événements sportifs.</p>
             <button className="btn-reserve" onClick={handleReserveClick}>Réserver ce terrain</button>
             <button className="btn-back" onClick={() => navigate('/terrain')}>Retour</button>
 
             {isReservationModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h2>Réserver le Terrain</h2>
+                        <h2>Réserver {terrain.Title}</h2>
                         <form onSubmit={handleSubmit}>
                             <div>
                                 <label>Nom:</label>

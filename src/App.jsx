@@ -1,12 +1,12 @@
-import { Route, Routes, Navigate } from "react-router-dom"
-import React, { useState } from "react"
-import Header from "./Header/Header"
-import Accueil from "./Lwst/Accueil"
-import Terrain from "./Lwst/Terrain"
-import TerrainDetail from "./Lwst/TerrainDetail"
-import Reservation from "./Lwst/Reservation"
-import Contact from "./Lwst/Contact"
-
+import { Route, Routes, Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import Header from "./Header/Header";
+import Accueil from "./Lwst/Accueil";
+import Terrain from "./Lwst/Terrain";
+import TerrainDetail from "./Lwst/TerrainDetail";
+import Reservation from "./Lwst/Reservation";
+import Contact from "./Lwst/Contact";
+import "./lwst/lwst.css"; // Assurez-vous d'avoir ce fichier CSS
 
 function App() {
   const [reservations, setReservations] = useState([]);
@@ -47,21 +47,28 @@ function App() {
   };
 
   return (
-    <div>
-      <Header/>
+    <div className="app-container">
+      {/* Vidéo en arrière-plan */}
+      <div className="video-background">
+        <video autoPlay loop muted playsInline>
+          <source src="/foot.mp4" type="video/mp4" />
+          Votre navigateur ne supporte pas la vidéo.
+        </video>
+      </div>
+      <div className="video-overlay"></div>
+
+      {/* Contenu du site */}
+      <Header />
       <Routes>
         <Route path="/" element={<Navigate to="/accueil" />} />
-        <Route path="accueil" element={<Accueil/>}/>
-        <Route path="terrain" element={<Terrain addReservation={addReservation} reservations={reservations}/>}/>
+        <Route path="accueil" element={<Accueil />} />
+        <Route path="terrain" element={<Terrain addReservation={addReservation} reservations={reservations} />} />
         <Route path="terrain/:id" element={<TerrainDetail terrains={terrains} addReservation={addReservation} reservations={reservations} />} />
-        <Route path="Reservation" element={<Reservation reservations={reservations} deleteReservation={deleteReservation} acceptReservation={acceptReservation}/>}/>
-        <Route path="Contact" element={<Contact/>}/>
-       
+        <Route path="Reservation" element={<Reservation reservations={reservations} deleteReservation={deleteReservation} acceptReservation={acceptReservation} />} />
+        <Route path="Contact" element={<Contact />} />
       </Routes>
     </div>
-     
-     
-  )
+  );
 }
 
-export default App
+export default App;
