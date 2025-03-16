@@ -17,7 +17,7 @@ function Terrain({ addReservation, reservations }) {
             id: 1,
             photo: 'tr1.jpg', // Assurez-vous que le chemin est correct
             Title: 'Terrain 1 - Gazon Synthétique',
-            description: 'Terrain de dernière génération avec gazon synthétique haute qualité. Parfait pour les matchs compétitifs.',
+            description: 'Terrain de dernière génération avec gazon synthétique haute qualité.',
         },
         {   
             id: 2,
@@ -103,9 +103,8 @@ function Terrain({ addReservation, reservations }) {
             
             {terr.map((e) => (
                 <div key={e.id} className="terrain">
-                    <Link to={`/terrain/${e.id}`}>
                         <img src={e.photo} alt={e.Title} className='im1' />
-                    </Link>
+                   
                     <div className="terrain-content">
                         <h3>{e.Title}</h3>
                         <p>{e.description}</p>

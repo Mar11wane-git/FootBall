@@ -8,7 +8,6 @@ function TerrainDetail({ terrains, addReservation, reservations }) {
     const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
-        email: '',
         date: '',
         timeSlot: ''
     });
@@ -58,7 +57,7 @@ function TerrainDetail({ terrains, addReservation, reservations }) {
         };
         addReservation(newReservation);
         setIsReservationModalOpen(false);
-        setFormData({ name: '', email: '', date: '', timeSlot: '' });
+        setFormData({ name: '', date: '', timeSlot: '' });
         setConfirmationMessage('Votre réservation a été enregistrée. Veuillez attendre la réponse de l\'administrateur.');
         
         setTimeout(() => {
@@ -96,10 +95,6 @@ function TerrainDetail({ terrains, addReservation, reservations }) {
                             <div>
                                 <label>Nom:</label>
                                 <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-                            </div>
-                            <div>
-                                <label>Email:</label>
-                                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
                             </div>
                             <div>
                                 <label>Date de Réservation:</label>

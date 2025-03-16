@@ -240,7 +240,7 @@ body{
 }
 
 .btn-ajt {
-    background-color: #388e3c;
+    background-color: #1acc23;
     color: white;
 }
 
@@ -262,8 +262,7 @@ body{
     padding: 10px;
     border: 1px solid #fff;
     border-radius: 5px;
-    background-color: #4caf50;
-    color: white;
+    color: rgb(0, 0, 0);
     font-family: sans-serif;
     appearance: none;
     -webkit-appearance: none;
@@ -451,7 +450,7 @@ td {
     padding: 12px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #388e3c;
+    background-color: #18d121;
     color: white;
     font-size: 1rem;
     cursor: pointer;
@@ -516,20 +515,7 @@ td {
     color: #ffffff;
 }
 
-button {
-    background-color: #3498db;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
 
-button:hover {
-    background-color: #2980b9;
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -537,6 +523,54 @@ button:hover {
         width: 95%;
     }
 }
+
+.btn-modify{
+    background-color: #21e321; /* Rouge vif */
+    color: white;
+    border: none;
+    padding: 10px 20px; /* Taille réduite pour un bouton de taille moyenne */
+    font-size: 0.9rem; /* Police de taille moyenne */
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: inline-block; /* Aligner avec d'autres éléments inline */
+    margin: 10px;
+}
+
+/* Hover effect */
+.btn-modify:hover {
+    background-color: #35cf1d; /* Rouge plus foncé */
+    transform: translateY(-2px); /* Léger soulèvement */
+}
+
+.deletion-message {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f44336; /* Rouge pour indiquer la suppression */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-size: 1rem;
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+    margin-top: 20px;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+}
+
+.deletion-message.fade-out {
+    opacity: 0;
+}
+
+
 
 
 

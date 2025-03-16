@@ -36,6 +36,12 @@ function App() {
     setReservations([...reservations, newReservation]);
   };
 
+  const modifyReservation = (updatedReservation) => {
+    setReservations(reservations.map(reservation =>
+      reservation.id === updatedReservation.id ? updatedReservation : reservation
+    ));
+  };
+
   const deleteReservation = (id) => {
     setReservations(reservations.filter(reservation => reservation.id !== id));
   };
@@ -64,8 +70,8 @@ function App() {
         <Route path="accueil" element={<Accueil />} />
         <Route path="terrain" element={<Terrain addReservation={addReservation} reservations={reservations} />} />
         <Route path="terrain/:id" element={<TerrainDetail terrains={terrains} addReservation={addReservation} reservations={reservations} />} />
-        <Route path="Reservation" element={<Reservation reservations={reservations} deleteReservation={deleteReservation} acceptReservation={acceptReservation} />} />
-        <Route path="Contact" element={<Contact />} />
+        <Route path="reservation" element={<Reservation reservations={reservations} deleteReservation={deleteReservation} modifyReservation={modifyReservation} />} />
+        <Route path="contact" element={<Contact />} />
       </Routes>
     </div>
   );
