@@ -30,6 +30,12 @@ function Terrain({ addReservation, reservations }) {
             photo: 'tr1.jpg',
             Title: 'Terrain 3 - Gazon Hybride',
             description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
+        },
+        {   
+            id: 4,
+            photo: 'tr1.jpg',
+            Title: 'Terrain 4 - Gazon Hybride',
+            description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
         }
     ];
 

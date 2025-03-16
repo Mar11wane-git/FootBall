@@ -17,19 +17,29 @@ function App() {
         photo: 'tr1.jpg',
         Title: 'Terrain 1 - Gazon Synthétique',
         description: 'Terrain de dernière génération avec gazon synthétique haute qualité. Parfait pour les matchs compétitifs.',
+        price: 200 // Prix en DH
     },
     {   
         id: 2,
         photo: 'tr1.jpg',
         Title: 'Terrain 2 - Gazon Naturel',
         description: 'Profitez de l\'authenticité du gazon naturel pour vos matchs et entraînements.',
+        price: 250 // Prix en DH
     },
     {   
         id: 3,
         photo: 'tr1.jpg',
         Title: 'Terrain 3 - Gazon Hybride',
         description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
-    }
+        price: 300 // Prix en DH
+    },
+    {   
+      id: 4,
+      photo: 'tr1.jpg',
+      Title: 'Terrain 4 - Gazon Hybride',
+      description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
+      price: 350 // Prix en DH
+  }
   ];
 
   const addReservation = (newReservation) => {
