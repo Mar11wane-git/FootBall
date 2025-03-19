@@ -118,4 +118,130 @@
         margin: 1rem 0;
     }
 }
+/* Styles pour les boutons d'authentification dans le header */
+.auth-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.login-button {
+    background-color: #4CAF50; /* Vert */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    text-decoration: none; /* Supprime le soulignement */
+    display: inline-block; /* Assure qu'il ne se comporte pas comme un lien */
+}
+
+
+.login-button:hover {
+    background-color: #45a049; /* Vert foncé */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.logout-button {
+    background-color: #f44336; /* Rouge */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f; /* Rouge foncé */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+.auth-button i {
+    font-size: 1.1em;
+}
+
+/* Animation pour les icônes */
+.auth-button:hover i {
+    animation: buttonIconAnimation 0.5s ease;
+}
+
+@keyframes buttonIconAnimation {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-3px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Ajustement du nav pour les nouveaux boutons */
+.nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.nav a:hover {
+    color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .nav {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .auth-button {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .nav a {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+}
 

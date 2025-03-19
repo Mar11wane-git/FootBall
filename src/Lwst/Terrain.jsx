@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import LoginPrompt from './LoginPrompt';
 
 function Terrain({ addReservation, reservations, user }) {
     const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
@@ -11,7 +12,7 @@ function Terrain({ addReservation, reservations, user }) {
     });
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [selectedTerrain, setSelectedTerrain] = useState(null);
-    const [loginPrompt, setLoginPrompt] = useState(false);
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const navigate = useNavigate();
     const [registeredTerrains, setRegisteredTerrains] = useState(() => {
         const saved = localStorage.getItem('registeredTerrains');
@@ -51,11 +52,7 @@ function Terrain({ addReservation, reservations, user }) {
 
     const handleReserveClick = (terrainId) => {
         if (!user) {
-            setLoginPrompt(true);
-            setTimeout(() => {
-                setLoginPrompt(false);
-                navigate('/login');
-            }, 3000);
+            setShowLoginPrompt(true);
             return;
         }
         setSelectedTerrain(terr.find(t => t.id === terrainId));
@@ -128,6 +125,7 @@ function Terrain({ addReservation, reservations, user }) {
 
     return (
         <div>
+            {showLoginPrompt && <LoginPrompt />}
             <h1>Terrains Disponibles</h1>
             <div className="container">
                 {terr.map((e) => (
@@ -148,12 +146,6 @@ function Terrain({ addReservation, reservations, user }) {
                 {confirmationMessage && (
                     <div className="confirmation-message">
                         {confirmationMessage}
-                    </div>
-                )}
-
-                {loginPrompt && (
-                    <div className="login-prompt">
-                        Veuillez vous connecter pour réserver un terrain.
                     </div>
                 )}
 

@@ -10,76 +10,65 @@ function Login({ setUser }) {
     const [error, setError] = useState('');
     const [users, setUsers] = useState(() => {
         const savedUsers = localStorage.getItem('users');
-        return savedUsers ? JSON.parse(savedUsers) : [
-            { username: 'soufiane', password: 'soufiane' }
-        ];
+        return savedUsers ? JSON.parse(savedUsers) : [{ username: 'soufiane', password: 'soufiane' }];
     });
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        localStorage.setItem('users', JSON.stringify(users));
+        if (users.length > 0) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
     }, [users]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         if (isLogin) {
-            // Logique de connexion
             const user = users.find(u => u.username === username && u.password === password);
             if (user) {
-                setUser({ username });
+                const userData = { username };
+                setUser(userData);
+                localStorage.setItem('user', JSON.stringify(userData)); // 🔥 Correction ici
+                setError('');
                 navigate('/accueil');
             } else {
                 setError('Nom d\'utilisateur ou mot de passe incorrect.');
             }
         } else {
-            // Logique d'inscription
             if (users.some(u => u.username === username)) {
                 setError('Ce nom d\'utilisateur existe déjà.');
                 return;
             }
 
-            // Validation du mot de passe
             if (password.length < 6) {
                 setError('Le mot de passe doit contenir au moins 6 caractères.');
                 return;
             }
 
-            // Validation de l'email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 setError('Veuillez entrer une adresse email valide.');
                 return;
             }
 
-            // Validation du numéro de téléphone
             const phoneRegex = /^[0-9]{10}$/;
             if (!phoneRegex.test(phone)) {
                 setError('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
                 return;
             }
 
-            // Création du nouveau compte
-            const newUser = {
-                username,
-                password,
-                email,
-                phone
-            };
-
+            const newUser = { username, password, email, phone };
             setUsers([...users, newUser]);
-            setError('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
-            
-            // Réinitialiser les champs
-            setUsername('');
-            setPassword('');
-            setEmail('');
-            setPhone('');
-            
-            // Retourner à la page de connexion
+
+            setUser({ username });  // 🔥 Connexion automatique après inscription
+            localStorage.setItem('user', JSON.stringify({ username }));
+            setError('Compte créé avec succès !');
+
             setTimeout(() => {
                 setIsLogin(true);
                 setError('');
+                navigate('/accueil'); // 🔥 Redirection après l'inscription
             }, 2000);
         }
     };
@@ -100,7 +89,7 @@ function Login({ setUser }) {
                             placeholder="Entrez votre nom d'utilisateur"
                         />
                     </div>
-                    
+
                     {!isLogin && (
                         <>
                             <div>
@@ -169,4 +158,4 @@ function Login({ setUser }) {
     );
 }
 
-export default Login; 
+export default Login;

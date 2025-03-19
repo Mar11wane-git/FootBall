@@ -1,11 +1,13 @@
-import React from 'react';
-import './Header.css'
-import {Link, useNavigate} from 'react-router-dom'
+import React, { useState } from 'react';
+import './Header.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Header({ user, logout }) {
     const navigate = useNavigate();
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
     const handleLogout = () => {
+        setIsLogoutModalOpen(false); // Ferme le modal avant de se déconnecter
         logout();
         navigate('/login');
     };
@@ -15,7 +17,7 @@ function Header({ user, logout }) {
             <div className="logo">
                 <Link to="/">LWST</Link>
             </div>
-            
+
             <div className="nav-links">
                 <Link to="/accueil">Accueil</Link>
                 <Link to="/terrain">Terrain</Link>
@@ -26,10 +28,32 @@ function Header({ user, logout }) {
 
             <div className="auth-button">
                 {user ? (
-                    <button className="login-btn" onClick={handleLogout}>Se déconnecter</button>
+                    <>
+                        <button className="logout-button" onClick={() => setIsLogoutModalOpen(true)}>
+                            <i className="fas fa-sign-out-alt"></i> Se déconnecter
+                        </button>
+                        {isLogoutModalOpen && (
+                            <div className="modal">
+                                <div className="modal-content">
+                                    <h2>Confirmation de Déconnexion</h2>
+                                    <p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
+                                    <div className="modal-actions">
+                                        <button className="btn-ajt" onClick={handleLogout}>
+                                            Oui
+                                        </button>
+                                        <button className="btn-annuler" onClick={() => setIsLogoutModalOpen(false)}>
+                                            Non
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <Link to="/login">
-                        <button className="login-btn">Se connecter</button>
+                        <button className="login-button">
+                            <i className="fas fa-sign-in-alt"></i> Se connecter
+                        </button>
                     </Link>
                 )}
             </div>
