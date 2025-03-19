@@ -44,10 +44,11 @@ body{
 
 
   h1 {
+    margin-top: 100px; /* Espace pour la navbar fixe */
     text-align: center;
-    color: white;
+    color: #ffffff;
+    padding: 20px 0;
     font-size: 2rem;
-    margin-bottom: 20px;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 .edo{
@@ -57,6 +58,9 @@ body{
     padding: 15px;
 }
 .re{
+    margin-top: 100px;
+    text-align: center;
+    color: #fff;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 50px;
     padding: 15px;
@@ -155,129 +159,132 @@ body{
 
 .modal {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #2d2929;
-    border: 2px solid #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
-    width: 90%;
-    max-width: 500px;
-    padding: 20px;
-    color: white;
-    animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -55%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
 }
 
 .modal-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border-radius: 10px;
+    background-color: #2d2929;
+    padding: 30px;
+    border-radius: 15px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.modal-content h2 {
+.registration-form {
+    width: 100%;
+}
+
+.form-group {
     margin-bottom: 20px;
-    text-align: center;
 }
 
-.modal-content form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.modal-content form div {
-    width: 100%;
-    margin-bottom: 15px;
-}
-
-.modal-content form label {
+.form-group label {
     display: block;
-    margin-bottom: 5px;
-    text-align: center;
+    margin-bottom: 8px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
 }
 
-.modal-content form input,
-.modal-content form select {
+.form-group input,
+.form-group select {
     width: 100%;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
 }
 
 .modal-actions {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 20px;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
 }
 
-.btn-ajt, .btn-annuler {
-    padding: 10px 20px;
+.modal-actions button {
+    padding: 12px 25px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .btn-ajt {
-    background-color: #1acc23;
+    background-color: #4CAF50;
     color: white;
 }
 
 .btn-ajt:hover {
-    background-color: #2e7d32;
+    background-color: #45a049;
+    transform: translateY(-2px);
 }
 
 .btn-annuler {
-    background-color: #d32f2f;
+    background-color: #f44336;
     color: white;
 }
 
 .btn-annuler:hover {
-    background-color: #c62828;
+    background-color: #d32f2f;
+    transform: translateY(-2px);
 }
 
-.modal select {
-    width: 74%;
-    padding: 10px;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    color: rgb(0, 0, 0);
-    font-family: sans-serif;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
+/* Style pour la barre de défilement personnalisée */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
 }
 
-.modal select:focus {
-    outline: none;
-    border-color: #388e3c;
+.modal-content::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
 }
 
-.modal option {
-    background-color: #2e7d32;
-    color: white;
+.modal-content::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #45a049;
+}
+
+/* Animation du modal */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    animation: modalFadeIn 0.3s ease-out;
 }
 
 .table-container {
@@ -412,6 +419,7 @@ td {
 }
 
 .terrain-detail {
+    padding-top: 80px; /* Espace pour la navbar */
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -485,6 +493,7 @@ td {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2em;
+    padding-top: 20px;
 }
 
 .terrain {
@@ -575,6 +584,825 @@ td {
 
 .deletion-message.fade-out {
     opacity: 0;
+}
+
+.auth-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f44336;
+    color: white;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-size: 1.1rem;
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Styles pour la page des tournois */
+.tournoi-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tournois-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tournoi-card {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.tournoi-card:hover {
+    transform: translateY(-5px);
+}
+
+.tournoi-card h2 {
+    color: #4CAF50;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.tournoi-info {
+    margin-bottom: 20px;
+}
+
+.tournoi-info p {
+    margin: 8px 0;
+    color: #fff;
+}
+
+.tournoi-info .description {
+    font-style: italic;
+    color: #bbb;
+    margin-top: 15px;
+}
+
+.btn-register {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-register:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.btn-register:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Styles spécifiques pour le formulaire d'inscription */
+.modal-content form div {
+    margin-bottom: 15px;
+}
+
+.modal-content form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.modal-content form input,
+.modal-content form select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+}
+
+.modal-content form input:focus,
+.modal-content form select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+/* Style pour le message de confirmation */
+.confirmation-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+@media (max-width: 768px) {
+    .tournois-grid {
+        grid-template-columns: 1fr;
+    z-index: 1000;
+}
+}
+
+.btn-unregister {
+    background-color: #f44336; /* Rouge pour indiquer l'annulation */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-unregister:hover {
+    background-color: #d32f2f; /* Couleur plus foncée au survol */
+    transform: translateY(-2px);
+}
+
+.btn-unregister:active {
+    background-color: #c62828; /* Couleur encore plus foncée lors du clic */
+    transform: translateY(0);
+}
+
+.login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.login-container form div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-container label {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.login-container input {
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.login-container button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+.login-container button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.login-container button:active {
+    transform: translateY(0);
+}
+
+.login-container .error {
+    color: #ff4d4d;
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: rgba(255, 77, 77, 0.1);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 77, 77, 0.2);
+}
+
+/* Animation d'entrée */
+@keyframes loginFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-container {
+    animation: loginFadeIn 0.5s ease-out;
+}
+
+/* Style pour les placeholders */
+.login-container input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .login-container {
+        width: 90%;
+        padding: 30px;
+        margin: 20px;
+    }
+
+    .login-container h2 {
+        font-size: 1.8rem;
+    }
+
+    .login-container input,
+    .login-container button {
+        padding: 12px;
+        font-size: 1rem;
+    }
+}
+
+/* Style pour le LoginPrompt */
+.login-prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 25px 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 1000;
+    min-width: 300px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.login-prompt p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.login-prompt .btn-login {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+}
+
+.login-prompt .btn-login:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-prompt .btn-login:active {
+    transform: translateY(0);
+}
+
+/* Animation pour le fade in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Style pour le message "Connectez-vous pour..." dans les cartes de tournoi */
+.login-required {
+    color: #666;
+    background-color: #f8f8f8;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .login-prompt {
+        width: 90%;
+        min-width: auto;
+        padding: 20px;
+    }
+
+    .login-prompt p {
+        font-size: 14px;
+    }
+
+    .login-prompt .btn-login {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Ajoutez ces styles à votre fichier lwst.css */
+
+.contact-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.contact-info {
+    text-align: center;
+}
+
+.contact-info h1 {
+    color: #fff;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+.info-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.info-item {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateY(-5px);
+}
+
+.info-item i {
+    font-size: 2rem;
+    color: #4CAF50;
+    margin-bottom: 15px;
+}
+
+.info-item h3 {
+    color: #fff;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.info-item p {
+    color: #ddd;
+    margin: 5px 0;
+}
+
+.contact-form {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.contact-form h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #fff;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .contact-container {
+        margin: 20px;
+    }
+
+    .info-section {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-form {
+        padding: 20px;
+    }
+}
+
+/* Animation pour le message de confirmation */
+.confirmation-message {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ajoutez ces styles pour le wrapper du login */
+.login-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+/* Modifiez la position du login-container */
+.login-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: none;
+    left: auto;
+    top: auto;
+}
+
+/* Mise à jour de l'animation */
+@keyframes loginFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-container {
+    animation: loginFadeIn 0.5s ease-out;
+}
+
+/* Ajustement responsive */
+@media (max-width: 480px) {
+    .login-container {
+        width: 90%;
+        margin: 20px;
+    }
+}
+
+/* Ajoutez ces styles pour le switch entre connexion et inscription */
+.switch-form {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.switch-btn {
+    background: none;
+    border: none;
+    color: #4CAF50;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    padding: 0;
+    margin-left: 5px;
+    transition: color 0.3s ease;
+}
+
+.switch-btn:hover {
+    color: #45a049;
+}
+
+/* Mise à jour des styles du formulaire pour accommoder les nouveaux champs */
+.login-container {
+    min-height: auto;
+    padding: 30px;
+}
+
+.login-container form {
+    gap: 20px;
+}
+
+.login-container input {
+    margin-bottom: 0;
+}
+
+/* Animation pour la transition entre les formulaires */
+.login-container form {
+    animation: formTransition 0.3s ease-out;
+}
+
+@keyframes formTransition {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style pour les messages d'erreur et de succès */
+.error {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.error.success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+/* Ajoutez ou modifiez ces styles pour améliorer l'apparence des boutons de connexion/inscription */
+
+.auth-switch {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-switch p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.auth-link {
+    color: #4CAF50;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background-color: rgba(76, 175, 80, 0.1);
+    transition: all 0.3s ease;
+}
+
+.auth-link:hover {
+    color: #fff;
+    background-color: #4CAF50;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* Style amélioré pour le bouton de soumission */
+.login-container button[type="submit"] {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.login-container button[type="submit"]:hover {
+    background: linear-gradient(45deg, #45a049, #4CAF50);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.login-container button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+}
+
+/* Animation améliorée pour le conteneur de login */
+.login-container {
+    animation: loginSlideIn 0.5s ease-out;
+}
+
+@keyframes loginSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style amélioré pour les champs de saisie */
+.login-container input {
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #fff;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
+}
+
+/* Style pour le titre */
+.login-container h2 {
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(45deg, #fff, #4CAF50);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Ajoutez ces styles pour le message de succès */
+.success-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.error {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: 1px solid rgba(244, 67, 54, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 

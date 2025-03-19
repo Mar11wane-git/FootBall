@@ -1,22 +1,39 @@
 import React from 'react';
 import './Header.css'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
-function Header() {
+function Header({ user, logout }) {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
-        <div className='all'>
-            <div className='me'>
-            <Link className='T' to="accueil">Terago</Link>
-            </div>
-            <div className='a'>
-            <Link  className='c'  to="accueil">Accueil</Link>
-            <Link  className='c' to='terrain'>Terrains</Link>
-            <Link  className='c' to='Reservation'>Reservations</Link>
-            <Link  className='c' to='Contact'>Contact</Link>
+        <nav className="navbar">
+            <div className="logo">
+                <Link to="/">LWST</Link>
             </div>
             
+            <div className="nav-links">
+                <Link to="/accueil">Accueil</Link>
+                <Link to="/terrain">Terrain</Link>
+                <Link to="/tournoi">Tournois</Link>
+                <Link to="/reservation">Réservation</Link>
+                <Link to="/contact">Contact</Link>
+            </div>
 
-        </div>
+            <div className="auth-button">
+                {user ? (
+                    <button className="login-btn" onClick={handleLogout}>Se déconnecter</button>
+                ) : (
+                    <Link to="/login">
+                        <button className="login-btn">Se connecter</button>
+                    </Link>
+                )}
+            </div>
+        </nav>
     );
 }
 

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import LoginPrompt from './LoginPrompt';
 
-function Reservation({ reservations, deleteReservation, modifyReservation }) {
+function Reservation({ reservations, deleteReservation, modifyReservation, user }) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [formData, setFormData] = useState({
@@ -12,6 +13,18 @@ function Reservation({ reservations, deleteReservation, modifyReservation }) {
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [reservationToDelete, setReservationToDelete] = useState(null);
     const [deletionMessage, setDeletionMessage] = useState('');
+    const [savedReservations, setSavedReservations] = useState(() => {
+        const saved = localStorage.getItem('reservations');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('reservations', JSON.stringify(savedReservations));
+    }, [savedReservations]);
+
+    if (!user) {
+        return <LoginPrompt />;
+    }
 
     const handleModifyClick = (reservation) => {
         setFormData(reservation);
@@ -25,6 +38,14 @@ function Reservation({ reservations, deleteReservation, modifyReservation }) {
 
     const confirmDelete = () => {
         deleteReservation(reservationToDelete);
+        
+        // Mettre à jour localStorage
+        const updatedReservations = savedReservations.filter(
+            reservation => reservation.id !== reservationToDelete
+        );
+        setSavedReservations(updatedReservations);
+        localStorage.setItem('reservations', JSON.stringify(updatedReservations));
+        
         setDeletionMessage('Réservation supprimée avec succès.');
         setTimeout(() => {
             setDeletionMessage('');
@@ -54,6 +75,14 @@ function Reservation({ reservations, deleteReservation, modifyReservation }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         modifyReservation(formData);
+        
+        // Mettre à jour localStorage
+        const updatedReservations = savedReservations.map(reservation =>
+            reservation.id === formData.id ? formData : reservation
+        );
+        setSavedReservations(updatedReservations);
+        localStorage.setItem('reservations', JSON.stringify(updatedReservations));
+        
         setConfirmationMessage('Réservation modifiée avec succès.');
         setTimeout(() => {
             setConfirmationMessage('');

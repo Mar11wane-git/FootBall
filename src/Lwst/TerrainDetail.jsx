@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import LoginPrompt from './LoginPrompt';
 
-function TerrainDetail({ terrains, addReservation, reservations }) {
+function TerrainDetail({ terrains, addReservation, reservations, user }) {
     const { id } = useParams();
     const navigate = useNavigate();
     const terrain = terrains.find(t => t.id === parseInt(id));
@@ -12,12 +13,25 @@ function TerrainDetail({ terrains, addReservation, reservations }) {
         timeSlot: ''
     });
     const [confirmationMessage, setConfirmationMessage] = useState('');
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [savedReservations, setSavedReservations] = useState(() => {
+        const saved = localStorage.getItem('terrainDetailReservations');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('terrainDetailReservations', JSON.stringify(savedReservations));
+    }, [savedReservations]);
 
     if (!terrain) {
         return <div>Terrain non trouvé</div>;
     }
 
     const handleReserveClick = () => {
+        if (!user) {
+            setShowLoginPrompt(true);
+            return;
+        }
         setIsReservationModalOpen(true);
     };
 
@@ -56,6 +70,12 @@ function TerrainDetail({ terrains, addReservation, reservations }) {
             ...formData
         };
         addReservation(newReservation);
+        
+        // Mettre à jour localStorage
+        const updatedReservations = [...savedReservations, newReservation];
+        setSavedReservations(updatedReservations);
+        localStorage.setItem('terrainDetailReservations', JSON.stringify(updatedReservations));
+        
         setIsReservationModalOpen(false);
         setFormData({ name: '', date: '', timeSlot: '' });
         setConfirmationMessage('Votre réservation a été enregistrée. Veuillez attendre la réponse de l\'administrateur.');
@@ -80,6 +100,7 @@ function TerrainDetail({ terrains, addReservation, reservations }) {
 
     return (
         <div className="terrain-detail">
+            {showLoginPrompt && <LoginPrompt />}
             <h1>{terrain.Title}</h1>
             <img src={`/${terrain.photo}`} alt={terrain.Title} className="terrain-image" />
             <p>{terrain.description}</p>

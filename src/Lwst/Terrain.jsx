@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-function Terrain({ addReservation, reservations }) {
+function Terrain({ addReservation, reservations, user }) {
     const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -11,6 +11,16 @@ function Terrain({ addReservation, reservations }) {
     });
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [selectedTerrain, setSelectedTerrain] = useState(null);
+    const [loginPrompt, setLoginPrompt] = useState(false);
+    const navigate = useNavigate();
+    const [registeredTerrains, setRegisteredTerrains] = useState(() => {
+        const saved = localStorage.getItem('registeredTerrains');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    useEffect(() => {
+        localStorage.setItem('registeredTerrains', JSON.stringify(registeredTerrains));
+    }, [registeredTerrains]);
 
     const terr = [
         {  
@@ -40,6 +50,14 @@ function Terrain({ addReservation, reservations }) {
     ];
 
     const handleReserveClick = (terrainId) => {
+        if (!user) {
+            setLoginPrompt(true);
+            setTimeout(() => {
+                setLoginPrompt(false);
+                navigate('/login');
+            }, 3000);
+            return;
+        }
         setSelectedTerrain(terr.find(t => t.id === terrainId));
         setIsReservationModalOpen(true);
     };
@@ -80,6 +98,12 @@ function Terrain({ addReservation, reservations }) {
             ...formData
         };
         addReservation(newReservation);
+        
+        // Mettre à jour localStorage
+        const updatedTerrains = { ...registeredTerrains, [selectedTerrain.id]: true };
+        setRegisteredTerrains(updatedTerrains);
+        localStorage.setItem('registeredTerrains', JSON.stringify(updatedTerrains));
+        
         setIsReservationModalOpen(false);
         setFormData({ name: '', email: '', date: '', timeSlot: '' });
         setConfirmationMessage('Votre réservation a été enregistrée. Veuillez attendre la réponse de l\'administrateur.');
@@ -105,65 +129,69 @@ function Terrain({ addReservation, reservations }) {
     return (
         <div>
             <h1>Terrains Disponibles</h1>
-        <div className="container">
-            
-            {terr.map((e) => (
-                <div key={e.id} className="terrain">
+            <div className="container">
+                {terr.map((e) => (
+                    <div key={e.id} className="terrain">
                         <img src={e.photo} alt={e.Title} className='im1' />
-                   
-                    <div className="terrain-content">
-                        <h3>{e.Title}</h3>
-                        <p>{e.description}</p>
-                        <Link to={`/terrain/${e.id}`}>
-                            <button className='btnn'>Voir Détail</button>
-                        </Link>
+                        <div className="terrain-content">
+                            <h3>{e.Title}</h3>
+                            <p>{e.description}</p>
+                            <Link to={`/terrain/${e.id}`}>
+                                <button className='btnn'>Voir Détail</button>
+                            </Link>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
 
-            {confirmationMessage && (
-                <div className="confirmation-message">
-                    {confirmationMessage}
-                </div>
-            )}
-
-            {isReservationModalOpen && selectedTerrain && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Réserver {selectedTerrain.Title}</h2>
-                        <form onSubmit={handleSubmit}>
-                            <div>
-                                <label>Nom:</label>
-                                <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-                            </div>
-                            <div>
-                                <label>Email:</label>
-                                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                            </div>
-                            <div>
-                                <label>Date de Réservation:</label>
-                                <input type="date" name="date" min={today} value={formData.date} onChange={handleChange} required />
-                            </div>
-                            <div>
-                                <label>Plage Horaire:</label>
-                                <select name="timeSlot" value={formData.timeSlot} onChange={handleChange} required>
-                                    <option value="" disabled>Choisir une heure</option>
-                                    {timeSlots.map(slot => (
-                                        <option key={slot} value={slot} disabled={reservedSlots.includes(slot)}>
-                                            {reservedSlots.includes(slot) ? `${slot} (Réservé)` : slot}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="modal-actions">
-                                <button type="submit" className="btn-ajt">Réserver</button>
-                                <button type="button" className="btn-annuler" onClick={handleCloseReservationModal}>Annuler</button>
-                            </div>
-                        </form>
+                {confirmationMessage && (
+                    <div className="confirmation-message">
+                        {confirmationMessage}
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+
+                {loginPrompt && (
+                    <div className="login-prompt">
+                        Veuillez vous connecter pour réserver un terrain.
+                    </div>
+                )}
+
+                {isReservationModalOpen && selectedTerrain && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <h2>Réserver {selectedTerrain.Title}</h2>
+                            <form onSubmit={handleSubmit}>
+                                <div>
+                                    <label>Nom:</label>
+                                    <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                                </div>
+                                <div>
+                                    <label>Email:</label>
+                                    <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                                </div>
+                                <div>
+                                    <label>Date de Réservation:</label>
+                                    <input type="date" name="date" min={today} value={formData.date} onChange={handleChange} required />
+                                </div>
+                                <div>
+                                    <label>Plage Horaire:</label>
+                                    <select name="timeSlot" value={formData.timeSlot} onChange={handleChange} required>
+                                        <option value="" disabled>Choisir une heure</option>
+                                        {timeSlots.map(slot => (
+                                            <option key={slot} value={slot} disabled={reservedSlots.includes(slot)}>
+                                                {reservedSlots.includes(slot) ? `${slot} (Réservé)` : slot}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="modal-actions">
+                                    <button type="submit" className="btn-ajt">Réserver</button>
+                                    <button type="button" className="btn-annuler" onClick={handleCloseReservationModal}>Annuler</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
