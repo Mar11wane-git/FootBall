@@ -129,8 +129,12 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
                             <td>{reservation.timeSlot}</td>
                             <td>{reservation.accepted ? 'Acceptée' : 'En attente'}</td>
                             <td>
-                                <button onClick={() => handleModifyClick(reservation)} className='btn-modify'>Modifier</button>
-                                <button onClick={() => handleDeleteClick(reservation.id)} className='btn'>Supprimer</button>
+                                <button onClick={() => handleModifyClick(reservation)} className='btn-modify'>
+                                    <i className="fas fa-edit"></i> Modifier
+                                </button>
+                                <button onClick={() => handleDeleteClick(reservation.id)} className='btn'>
+                                    <i className="fas fa-trash-alt"></i> Supprimer
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -154,16 +158,32 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
                                 <label>Plage Horaire:</label>
                                 <select name="timeSlot" value={formData.timeSlot} onChange={handleChange} required>
                                     <option value="" disabled>Choisir une heure</option>
-                                    {timeSlots.map(slot => (
-                                        <option key={slot} value={slot}>
-                                            {slot}
-                                        </option>
-                                    ))}
+                                    {timeSlots.map(slot => {
+                                        const isReserved = reservations.some(
+                                            reservation => 
+                                                reservation.date === formData.date && 
+                                                reservation.timeSlot === slot &&
+                                                reservation.id !== formData.id
+                                        );
+                                        return (
+                                            <option 
+                                                key={slot} 
+                                                value={slot}
+                                                disabled={isReserved}
+                                            >
+                                                {isReserved ? `${slot} (Déjà réservé)` : slot}
+                                            </option>
+                                        );
+                                    })}
                                 </select>
                             </div>
                             <div className="modal-actions">
-                                <button type="submit" className="btn-ajt">Enregistrer</button>
-                                <button type="button" className="btn-annuler" onClick={handleCloseEditModal}>Annuler</button>
+                                <button type="submit" className="btn-ajt">
+                                    <i className="fas fa-check"></i> Enregistrer
+                                </button>
+                                <button type="button" className="btn-annuler" onClick={handleCloseEditModal}>
+                                    <i className="fas fa-times"></i> Annuler
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -175,8 +195,12 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
                     <div className="modal-content">
                         <h2>Êtes-vous sûr de vouloir supprimer cette réservation ?</h2>
                         <div className="modal-actions">
-                            <button className="btn-ajt" onClick={confirmDelete}>Confirmer</button>
-                            <button className="btn-annuler" onClick={() => setIsDeleteModalOpen(false)}>Annuler</button>
+                            <button className="btn-ajt" onClick={confirmDelete}>
+                                <i className="fas fa-check"></i> Confirmer
+                            </button>
+                            <button className="btn-annuler" onClick={() => setIsDeleteModalOpen(false)}>
+                                <i className="fas fa-times"></i> Annuler
+                            </button>
                         </div>
                     </div>
                 </div>

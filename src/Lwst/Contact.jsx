@@ -110,7 +110,9 @@ function Contact() {
                             rows="5"
                         ></textarea>
                     </div>
-                    <button type="submit" className="submit-btn">Envoyer le message</button>
+                    <button type="submit" className="submit-btn">
+                        <i className="fas fa-paper-plane"></i> Envoyer le message
+                    </button>
                 </form>
             </div>
         </div>

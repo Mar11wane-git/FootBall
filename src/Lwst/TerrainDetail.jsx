@@ -106,8 +106,12 @@ function TerrainDetail({ terrains, addReservation, reservations, user }) {
             <p>{terrain.description}</p>
             <p>Ce terrain est équipé de vestiaires modernes, d'un éclairage LED pour les matchs nocturnes, et d'un système de drainage avancé pour garantir des conditions de jeu optimales même après la pluie. Idéal pour les tournois et les événements sportifs.</p>
             <p className="terrain-price">Prix: {terrain.price} DH</p>
-            <button className="btn-reserve" onClick={handleReserveClick}>Réserver ce terrain</button>
-            <button className="btn-back" onClick={() => navigate('/terrain')}>Retour</button>
+            <button className="btn-reserve" onClick={handleReserveClick}>
+                <i className="fas fa-calendar-plus"></i> Réserver ce terrain
+            </button>
+            <button className="btn-back" onClick={() => navigate('/terrain')}>
+                <i className="fas fa-arrow-left"></i> Retour
+            </button>
 
             {isReservationModalOpen && (
                 <div className="modal">
@@ -134,8 +138,12 @@ function TerrainDetail({ terrains, addReservation, reservations, user }) {
                                 </select>
                             </div>
                             <div className="modal-actions">
-                                <button type="submit" className="btn-ajt">Réserver</button>
-                                <button type="button" className="btn-annuler" onClick={handleCloseReservationModal}>Annuler</button>
+                                <button type="submit" className="btn-ajt">
+                                    <i className="fas fa-check"></i> Réserver
+                                </button>
+                                <button type="button" className="btn-annuler" onClick={handleCloseReservationModal}>
+                                    <i className="fas fa-times"></i> Annuler
+                                </button>
                             </div>
                         </form>
                     </div>

@@ -138,7 +138,11 @@ function Login({ setUser }) {
                     </div>
 
                     <button type="submit">
-                        {isLogin ? 'Se connecter' : 'S\'inscrire'}
+                        {isLogin ? (
+                            <><i className="fas fa-sign-in-alt"></i> Se connecter</>
+                        ) : (
+                            <><i className="fas fa-user-plus"></i> S'inscrire</>
+                        )}
                     </button>
                 </form>
 

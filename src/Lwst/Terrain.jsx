@@ -137,7 +137,9 @@ function Terrain({ addReservation, reservations, user }) {
                             <h3>{e.Title}</h3>
                             <p>{e.description}</p>
                             <Link to={`/terrain/${e.id}`}>
-                                <button className='btnn'>Voir Détail</button>
+                                <button className='btnn'>
+                                    <i className="fas fa-eye"></i> Voir Détail
+                                </button>
                             </Link>
                         </div>
                     </div>
@@ -184,8 +186,12 @@ function Terrain({ addReservation, reservations, user }) {
                                     </select>
                                 </div>
                                 <div className="modal-actions">
-                                    <button type="submit" className="btn-ajt">Réserver</button>
-                                    <button type="button" className="btn-annuler" onClick={handleCloseReservationModal}>Annuler</button>
+                                    <button type="submit" className="btn-ajt">
+                                        <i className="fas fa-check"></i> Réserver
+                                    </button>
+                                    <button type="button" className="btn-annuler" onClick={handleCloseReservationModal}>
+                                        <i className="fas fa-times"></i> Annuler
+                                    </button>
                                 </div>
                             </form>
                         </div>
