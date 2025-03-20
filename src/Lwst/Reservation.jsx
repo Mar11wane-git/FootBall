@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import LoginPrompt from './LoginPrompt';
 
-function Reservation({ reservations, deleteReservation, modifyReservation, user }) {
+function Reservation({ reservations, deleteReservation, modifyReservation, acceptReservation, user }) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         id: null,
         name: '',
         date: '',
-        timeSlot: ''
+        timeSlot: '',
+        accepted: false,
+        userId: ''
     });
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [reservationToDelete, setReservationToDelete] = useState(null);
     const [deletionMessage, setDeletionMessage] = useState('');
-    const [savedReservations, setSavedReservations] = useState(() => {
-        const saved = localStorage.getItem('reservations');
-        return saved ? JSON.parse(saved) : [];
-    });
 
-    useEffect(() => {
-        localStorage.setItem('reservations', JSON.stringify(savedReservations));
-    }, [savedReservations]);
-
+    // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
     if (!user) {
         return <LoginPrompt />;
     }
 
+    // Filtrer les réservations en fonction du rôle de l'utilisateur
+    const displayedReservations = user.role === 'admin' 
+        ? reservations  // Afficher toutes les réservations pour l'admin
+        : reservations.filter(res => res.userId === user.username);  // Filtrer pour l'utilisateur standard
+
     const handleModifyClick = (reservation) => {
-        setFormData(reservation);
+        setFormData({...reservation});
         setIsEditModalOpen(true);
     };
 
@@ -38,13 +38,6 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
 
     const confirmDelete = () => {
         deleteReservation(reservationToDelete);
-        
-        // Mettre à jour localStorage
-        const updatedReservations = savedReservations.filter(
-            reservation => reservation.id !== reservationToDelete
-        );
-        setSavedReservations(updatedReservations);
-        localStorage.setItem('reservations', JSON.stringify(updatedReservations));
         
         setDeletionMessage('Réservation supprimée avec succès.');
         setTimeout(() => {
@@ -60,7 +53,9 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
             id: null,
             name: '',
             date: '',
-            timeSlot: ''
+            timeSlot: '',
+            accepted: false,
+            userId: ''
         });
     };
 
@@ -74,20 +69,28 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        modifyReservation(formData);
         
-        // Mettre à jour localStorage
-        const updatedReservations = savedReservations.map(reservation =>
-            reservation.id === formData.id ? formData : reservation
-        );
-        setSavedReservations(updatedReservations);
-        localStorage.setItem('reservations', JSON.stringify(updatedReservations));
+        // Prepare the updated reservation data
+        const updatedReservation = {
+            ...formData,
+            accepted: formData.accepted === 'true' || formData.accepted === true
+        };
+        
+        modifyReservation(updatedReservation);
         
         setConfirmationMessage('Réservation modifiée avec succès.');
         setTimeout(() => {
             setConfirmationMessage('');
         }, 5000);
         handleCloseEditModal();
+    };
+
+    const handleAccept = (id) => {
+        acceptReservation(id);
+        setConfirmationMessage('Réservation acceptée avec succès.');
+        setTimeout(() => {
+            setConfirmationMessage('');
+        }, 5000);
     };
 
     const today = new Date().toISOString().split('T')[0];
@@ -99,8 +102,12 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
     ];
 
     return (
-        <div>
-            <h1>Historique des Réservations</h1>
+        <div className="reservation-container">
+            <h1>
+                {user.role === 'admin' 
+                    ? 'Toutes les Réservations' 
+                    : 'Historique des Réservations'}
+            </h1>
             {confirmationMessage && (
                 <div className="confirmation-message">
                     {confirmationMessage}
@@ -111,33 +118,49 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
                     {deletionMessage}
                 </div>
             )}
-            <table border="1">
+            
+            <table className="reservation-table">
                 <thead>
                     <tr>
                         <th>Nom</th>
                         <th>Date</th>
                         <th>Plage Horaire</th>
                         <th>Statut</th>
+                        {user.role === 'admin' && <th>Utilisateur</th>}
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {reservations.map(reservation => (
-                        <tr key={reservation.id}>
-                            <td>{reservation.name}</td>
-                            <td>{reservation.date}</td>
-                            <td>{reservation.timeSlot}</td>
-                            <td>{reservation.accepted ? 'Acceptée' : 'En attente'}</td>
-                            <td>
-                                <button onClick={() => handleModifyClick(reservation)} className='btn-modify'>
-                                    <i className="fas fa-edit"></i> Modifier
-                                </button>
-                                <button onClick={() => handleDeleteClick(reservation.id)} className='btn'>
-                                    <i className="fas fa-trash-alt"></i> Supprimer
-                                </button>
+                    {displayedReservations.length === 0 ? (
+                        <tr>
+                            <td colSpan={user.role === 'admin' ? 6 : 5} className="no-reservations">
+                                Aucune réservation disponible.
                             </td>
                         </tr>
-                    ))}
+                    ) : (
+                        displayedReservations.map(reservation => (
+                            <tr key={reservation.id} className={reservation.accepted ? 'accepted' : 'pending'}>
+                                <td>{reservation.name}</td>
+                                <td>{reservation.date}</td>
+                                <td>{reservation.timeSlot}</td>
+                                <td>{reservation.accepted ? 'Acceptée' : 'En attente'}</td>
+                                {user.role === 'admin' && <td>{reservation.userId || 'Non assigné'}</td>}
+                                <td className="actions">
+                                    <button onClick={() => handleModifyClick(reservation)} className="btn-modify">
+                                        <i className="fas fa-edit"></i> Modifier
+                                    </button>
+                                    <button onClick={() => handleDeleteClick(reservation.id)} className="btn">
+                                        <i className="fas fa-trash-alt"></i> Supprimer
+                                    </button>
+                                    {user.role === 'admin' && !reservation.accepted && (
+                                        <button onClick={() => handleAccept(reservation.id)} className="btn-modify">
+                                            <i className="fas fa-check"></i> Accepter
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
 
@@ -146,17 +169,17 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
                     <div className="modal-content">
                         <h2>Modifier Réservation</h2>
                         <form onSubmit={handleSubmit}>
-                            <div>
+                            <div className="form-group">
                                 <label>Nom:</label>
                                 <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                             </div>                
-                            <div>
+                            <div className="form-group">
                                 <label>Date de Réservation:</label>
                                 <input type="date" name="date" min={today} value={formData.date} onChange={handleChange} required />
                             </div>
-                            <div>
+                            <div className="form-group">
                                 <label>Plage Horaire:</label>
-                                <select name="timeSlot" value={formData.timeSlot} onChange={handleChange} required>
+                                <select name="timeSlot" value={formData.timeSlot || ''} onChange={handleChange} required>
                                     <option value="" disabled>Choisir une heure</option>
                                     {timeSlots.map(slot => {
                                         const isReserved = reservations.some(
@@ -177,11 +200,35 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
                                     })}
                                 </select>
                             </div>
+                            {user.role === 'admin' && (
+                                <div className="form-group">
+                                    <label>Utilisateur:</label>
+                                    <input 
+                                        type="text" 
+                                        name="userId" 
+                                        value={formData.userId || ''} 
+                                        onChange={handleChange} 
+                                        readOnly={formData.userId !== user.username} 
+                                    />
+                                </div>
+                            )}
+                            <div className="form-group">
+                                <label>Statut:</label>
+                                <select 
+                                    name="accepted" 
+                                    value={formData.accepted === true || formData.accepted === 'true' ? 'true' : 'false'} 
+                                    onChange={handleChange}
+                                    disabled={user.role !== 'admin'}
+                                >
+                                    <option value="false">En attente</option>
+                                    <option value="true">Acceptée</option>
+                                </select>
+                            </div>
                             <div className="modal-actions">
-                                <button type="submit" className="btn-ajt">
+                                <button type="submit" className="btn-save">
                                     <i className="fas fa-check"></i> Enregistrer
                                 </button>
-                                <button type="button" className="btn-annuler" onClick={handleCloseEditModal}>
+                                <button type="button" className="btn-cancel" onClick={handleCloseEditModal}>
                                     <i className="fas fa-times"></i> Annuler
                                 </button>
                             </div>
@@ -195,10 +242,10 @@ function Reservation({ reservations, deleteReservation, modifyReservation, user 
                     <div className="modal-content">
                         <h2>Êtes-vous sûr de vouloir supprimer cette réservation ?</h2>
                         <div className="modal-actions">
-                            <button className="btn-ajt" onClick={confirmDelete}>
+                            <button className="btn-modify" onClick={confirmDelete}>
                                 <i className="fas fa-check"></i> Confirmer
                             </button>
-                            <button className="btn-annuler" onClick={() => setIsDeleteModalOpen(false)}>
+                            <button className="btn" onClick={() => setIsDeleteModalOpen(false)}>
                                 <i className="fas fa-times"></i> Annuler
                             </button>
                         </div>

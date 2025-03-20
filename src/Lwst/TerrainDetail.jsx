@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LoginPrompt from './LoginPrompt';
 
-function TerrainDetail({ terrains, addReservation, reservations, user }) {
+function TerrainDetail({ addReservation, reservations, user }) {
     const { id } = useParams();
     const navigate = useNavigate();
-    const terrain = terrains.find(t => t.id === parseInt(id));
+    const [terrain, setTerrain] = useState(null);
     const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
+        email: '',
         date: '',
         timeSlot: ''
     });
@@ -19,12 +20,32 @@ function TerrainDetail({ terrains, addReservation, reservations, user }) {
         return saved ? JSON.parse(saved) : [];
     });
 
+    // Chargement des terrains depuis localStorage
+    useEffect(() => {
+        const savedTerrains = localStorage.getItem('terrains');
+        if (savedTerrains) {
+            const terrains = JSON.parse(savedTerrains);
+            const foundTerrain = terrains.find(t => t.id === parseInt(id));
+            if (foundTerrain) {
+                setTerrain(foundTerrain);
+            }
+        }
+    }, [id]);
+
     useEffect(() => {
         localStorage.setItem('terrainDetailReservations', JSON.stringify(savedReservations));
     }, [savedReservations]);
 
     if (!terrain) {
-        return <div>Terrain non trouvé</div>;
+        return (
+            <div className="terrain-not-found">
+                <h2>Terrain non trouvé</h2>
+                <p>Le terrain que vous recherchez n'existe pas ou a été supprimé.</p>
+                <button className="btn-back" onClick={() => navigate('/terrain')}>
+                    <i className="fas fa-arrow-left"></i> Retour à la liste des terrains
+                </button>
+            </div>
+        );
     }
 
     const handleReserveClick = () => {
@@ -67,6 +88,7 @@ function TerrainDetail({ terrains, addReservation, reservations, user }) {
         const newReservation = {
             id: Date.now(),
             terrainId: terrain.id,
+            terrainTitle: terrain.Title,
             ...formData
         };
         addReservation(newReservation);
@@ -77,8 +99,8 @@ function TerrainDetail({ terrains, addReservation, reservations, user }) {
         localStorage.setItem('terrainDetailReservations', JSON.stringify(updatedReservations));
         
         setIsReservationModalOpen(false);
-        setFormData({ name: '', date: '', timeSlot: '' });
-        setConfirmationMessage('Votre réservation a été enregistrée. Veuillez attendre la réponse de l\'administrateur.');
+        setFormData({ name: '', email: '', date: '', timeSlot: '' });
+        setConfirmationMessage('Votre réservation a été enregistrée avec succès.');
         
         setTimeout(() => {
             setConfirmationMessage('');
@@ -101,17 +123,60 @@ function TerrainDetail({ terrains, addReservation, reservations, user }) {
     return (
         <div className="terrain-detail">
             {showLoginPrompt && <LoginPrompt />}
-            <h1>{terrain.Title}</h1>
-            <img src={`/${terrain.photo}`} alt={terrain.Title} className="terrain-image" />
-            <p>{terrain.description}</p>
-            <p>Ce terrain est équipé de vestiaires modernes, d'un éclairage LED pour les matchs nocturnes, et d'un système de drainage avancé pour garantir des conditions de jeu optimales même après la pluie. Idéal pour les tournois et les événements sportifs.</p>
-            <p className="terrain-price">Prix: {terrain.price} DH</p>
-            <button className="btn-reserve" onClick={handleReserveClick}>
-                <i className="fas fa-calendar-plus"></i> Réserver ce terrain
-            </button>
-            <button className="btn-back" onClick={() => navigate('/terrain')}>
-                <i className="fas fa-arrow-left"></i> Retour
-            </button>
+            
+            <div className="terrain-header">
+                <h1>{terrain.Title}</h1>
+                <div className="terrain-actions">
+                    <button className="btn-reserve" onClick={handleReserveClick}>
+                        <i className="fas fa-calendar-plus"></i> Réserver ce terrain
+                    </button>
+                    <button className="btn-back" onClick={() => navigate('/terrain')}>
+                        <i className="fas fa-arrow-left"></i> Retour
+                    </button>
+                </div>
+            </div>
+            
+            <div className="terrain-content">
+                <div className="terrain-image-container">
+                    <img 
+                        src={terrain.photo.startsWith('http') ? terrain.photo : `/${terrain.photo}`} 
+                        alt={terrain.Title} 
+                        className="terrain-image" 
+                    />
+                </div>
+                
+                <div className="terrain-info">
+                    <div className="terrain-description">
+                        <h2>Description</h2>
+                        <p>{terrain.description}</p>
+                        <p>Ce terrain est équipé de vestiaires modernes, d'un éclairage LED pour les matchs nocturnes, et d'un système de drainage avancé pour garantir des conditions de jeu optimales même après la pluie.</p>
+                    </div>
+                    
+                    <div className="terrain-specs">
+                        <h2>Spécifications</h2>
+                        <ul>
+                            <li><strong>Type de surface:</strong> {terrain.Title.includes('Synthétique') ? 'Gazon synthétique' : 
+                                  terrain.Title.includes('Naturel') ? 'Gazon naturel' : 
+                                  terrain.Title.includes('Hybride') ? 'Gazon hybride' : 'Gazon standard'}</li>
+                            <li><strong>Dimensions:</strong> 40m x 20m</li>
+                            <li><strong>Éclairage:</strong> Système LED</li>
+                            <li><strong>Disponibilité:</strong> 9h00 - 22h00</li>
+                            <li><strong>Prix:</strong> <span className="price">{terrain.price || '150'} DH/heure</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div className="terrain-amenities">
+                        <h2>Équipements</h2>
+                        <ul>
+                            <li><i className="fas fa-tshirt"></i> Vestiaires</li>
+                            <li><i className="fas fa-shower"></i> Douches</li>
+                            <li><i className="fas fa-parking"></i> Parking</li>
+                            <li><i className="fas fa-wifi"></i> Wi-Fi gratuit</li>
+                            <li><i className="fas fa-utensils"></i> Cafétéria</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
             {isReservationModalOpen && (
                 <div className="modal">
@@ -121,6 +186,10 @@ function TerrainDetail({ terrains, addReservation, reservations, user }) {
                             <div>
                                 <label>Nom:</label>
                                 <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                            </div>
+                            <div>
+                                <label>Email:</label>
+                                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
                             </div>
                             <div>
                                 <label>Date de Réservation:</label>

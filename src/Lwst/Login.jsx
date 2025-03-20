@@ -8,10 +8,41 @@ function Login({ setUser }) {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
+    
+    // Modified initialization to ensure default users are always available
     const [users, setUsers] = useState(() => {
-        const savedUsers = localStorage.getItem('users');
-        return savedUsers ? JSON.parse(savedUsers) : [{ username: 'soufiane', password: 'soufiane' }];
+        const defaultUsers = [
+            { username: 'soufiane', password: 'soufiane', role: 'user' },
+            { username: 'admin', password: 'admin', role: 'admin' }
+        ];
+        
+        try {
+            const savedUsers = localStorage.getItem('users');
+            const parsedUsers = savedUsers ? JSON.parse(savedUsers) : [];
+            
+            // Ensure admin and soufiane users always exist
+            const adminExists = parsedUsers.some(u => u.username === 'admin');
+            const soufianeExists = parsedUsers.some(u => u.username === 'soufiane');
+            
+            if (!adminExists) {
+                parsedUsers.push({ username: 'admin', password: 'admin', role: 'admin' });
+            }
+            
+            if (!soufianeExists) {
+                parsedUsers.push({ username: 'soufiane', password: 'soufiane', role: 'user' });
+            }
+            
+            return parsedUsers.length > 0 ? parsedUsers : defaultUsers;
+        } catch (error) {
+            console.error("Error loading users from localStorage:", error);
+            return defaultUsers;
+        }
     });
+
+    // Debug helper - log users to console on component mount
+    useEffect(() => {
+        console.log("Current users:", users);
+    }, []);
 
     const navigate = useNavigate();
 
@@ -23,20 +54,25 @@ function Login({ setUser }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("Login attempt:", username, password); // Debug log
 
         if (isLogin) {
-            const user = users.find(u => u.username === username && u.password === password);
+            // Case-insensitive username comparison but case-sensitive password
+            const user = users.find(
+                u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+            );
+            
             if (user) {
-                const userData = { username };
+                const userData = { username: user.username, role: user.role };
                 setUser(userData);
-                localStorage.setItem('user', JSON.stringify(userData)); // 🔥 Correction ici
+                localStorage.setItem('user', JSON.stringify(userData));
                 setError('');
                 navigate('/accueil');
             } else {
                 setError('Nom d\'utilisateur ou mot de passe incorrect.');
             }
         } else {
-            if (users.some(u => u.username === username)) {
+            if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
                 setError('Ce nom d\'utilisateur existe déjà.');
                 return;
             }
@@ -58,26 +94,44 @@ function Login({ setUser }) {
                 return;
             }
 
-            const newUser = { username, password, email, phone };
+            const newUser = { 
+                username, 
+                password, 
+                email, 
+                phone,
+                role: 'user' // Ensure new users have a role assigned
+            };
             setUsers([...users, newUser]);
 
-            setUser({ username });  // 🔥 Connexion automatique après inscription
-            localStorage.setItem('user', JSON.stringify({ username }));
+            setUser({ username, role: 'user' });  // Add role to user data
+            localStorage.setItem('user', JSON.stringify({ username, role: 'user' }));
             setError('Compte créé avec succès !');
 
             setTimeout(() => {
                 setIsLogin(true);
                 setError('');
-                navigate('/accueil'); // 🔥 Redirection après l'inscription
+                navigate('/accueil');
             }, 2000);
         }
+    };
+
+    // Function to reset localStorage users (can be added as a dev button)
+    const resetUsers = () => {
+        const defaultUsers = [
+            { username: 'soufiane', password: 'soufiane', role: 'user' },
+            { username: 'admin', password: 'admin', role: 'admin' }
+        ];
+        localStorage.setItem('users', JSON.stringify(defaultUsers));
+        setUsers(defaultUsers);
+        setError('Utilisateurs réinitialisés');
+        setTimeout(() => setError(''), 2000);
     };
 
     return (
         <div className="login-wrapper">
             <div className="login-container">
                 <h2>{isLogin ? 'Connexion' : 'Inscription'}</h2>
-                {error && <p className={error.includes('succès') ? 'success-message' : 'error'}>{error}</p>}
+                {error && <p className={error.includes('succès') || error.includes('réinitialisés') ? 'success-message' : 'error'}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label>Nom d'utilisateur</label>
@@ -138,7 +192,7 @@ function Login({ setUser }) {
                 <div className="auth-switch">
                     <p>
                         {isLogin ? "Vous n'avez pas de compte ?" : "Vous avez déjà un compte ?"}
-                        <span 
+                        <span
                             onClick={() => {
                                 setIsLogin(!isLogin);
                                 setError('');
@@ -152,6 +206,23 @@ function Login({ setUser }) {
                             {isLogin ? " Inscrivez-vous" : " Connectez-vous"}
                         </span>
                     </p>
+                </div>
+                
+                {/* Dev tool - can be removed in production */}
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                    <button 
+                        onClick={resetUsers} 
+                        style={{ 
+                            background: 'none', 
+                            border: '1px solid #666', 
+                            padding: '5px 10px', 
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                            color: '#666' 
+                        }}
+                    >
+                        Réinitialiser les utilisateurs
+                    </button>
                 </div>
             </div>
         </div>

@@ -1502,6 +1502,714 @@ select option[disabled] {
     animation: fadeIn 0.5s ease forwards; /* Applique l'animation */
     opacity: 0; /* Assurez-vous que l'élément est invisible au départ */
 }
+/* Styles pour l'interface admin des messages */
+.admin-messages {
+    width: 90%;
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    color: #fff;
+}
+
+.admin-messages h1 {
+    color: #fff;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+    position: relative;
+}
+
+.admin-messages h1:after {
+    content: '';
+    width: 80px;
+    height: 4px;
+    background: #4CAF50; /* Green color from the photo */
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.no-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.no-messages i {
+    font-size: 4rem;
+    color: #4CAF50; /* Green color from the photo */
+    margin-bottom: 1rem;
+}
+
+.no-messages p {
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.message-card {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-left: 4px solid #555;
+    transition: all 0.3s ease;
+    color: #fff;
+}
+
+.message-card.unread {
+    border-left: 4px solid #4CAF50; /* Green color from the photo */
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.message-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #333;
+}
+
+.message-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.message-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.message-date {
+    font-size: 0.85rem;
+    color: #ccc;
+}
+
+.new-badge {
+    background-color: #4CAF50; /* Green color from the photo */
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.sender-info {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.message-content {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #fff;
+    white-space: pre-line;
+}
+
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.read-btn {
+    background-color: #4CAF50; /* Green color from the photo */
+    color: white;
+}
+
+.read-btn:hover {
+    background-color: #3e8e41; /* Darker green for hover */
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Style pour la version mobile */
+@media (max-width: 768px) {
+    .admin-messages {
+        padding: 1.5rem;
+        margin: 2rem auto;
+    }
+   
+    .message-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+   
+    .message-meta {
+        width: 100%;
+        justify-content: space-between;
+    }
+   
+    .message-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+   
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* Style général de la page */
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Titre principal */
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 2rem 0;
+  }
+  
+  /* Container pour les terrains */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Style pour chaque terrain */
+  .terrain {
+    width: 100%;
+    max-width: 350px;
+    background-color: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+  }
+  
+  .terrain:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Style pour l'image du terrain */
+  .terrain .im1 {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  /* Contenu du terrain */
+  .terrain-content {
+    padding: 1rem;
+  }
+  
+  /* Titre du terrain */
+  .terrain-content h3 {
+    font-size: 1.5rem;
+    color: #7CFC00; /* Vert clair */
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Description du terrain */
+  .terrain-content p {
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+  }
+  
+  /* Prix du terrain */
+  .terrain-content .price {
+    font-weight: bold;
+    color: #7CFC00;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Boutons */
+  .btnn {
+    background-color: #4CAF50; /* Vert */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s;
+  }
+  
+  .btnn:hover {
+    background-color: #45a049;
+  }
+  
+  .btnn i {
+    margin-right: 5px;
+  }
+  
+  /* Style pour le formulaire d'ajout de terrain */
+  .admin-controls {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    padding: 1rem;
+    background-color: #111;
+    border-radius: 10px;
+  }
+  
+  .add-terrain-form {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #222;
+    border-radius: 8px;
+  }
+  
+  .add-terrain-form h3 {
+    color: #7CFC00;
+    margin-bottom: 1rem;
+  }
+  
+  .add-terrain-form form div {
+    margin-bottom: 1rem;
+  }
+  
+  .add-terrain-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #e0e0e0;
+  }
+  
+  .add-terrain-form input,
+  .add-terrain-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .add-terrain-form textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Bouton d'ajout de terrain */
+  .btn-ajt {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-ajt:hover {
+    background-color: #45a049;
+  }
+  
+  .btn-ajt i {
+    margin-right: 5px;
+  }
+  
+  /* Bouton d'annulation */
+  .btn-annuler {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s;
+    margin-left: 0.5rem;
+  }
+  
+  .btn-annuler:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Message de confirmation */
+  .confirmation-message {
+    background-color: rgba(76, 175, 80, 0.8);
+    color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 1rem;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .container {
+      gap: 1rem;
+    }
+    
+    .terrain {
+      max-width: 100%;
+    }
+  }
+  .btn-accept {
+    background-color: #4CAF50;
+    color: white;
+    margin-right: 5px;
+  }
+  
+  .btn-reject {
+    background-color: #f44336;
+    color: white;
+    margin-right: 5px;
+  }
+  
+  tr.accepted {
+    background-color: rgba(76, 175, 80, 0.2);
+  }
+  
+  tr.rejected {
+    background-color: rgba(244, 67, 54, 0.2);
+  }
+  /* Style du composant Tournoi */
+.tournoi-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tournoi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tournoi-header h1 {
+    color: #ffffff;
+    margin: 0;
+}
+
+.btn-add-tournoi {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-add-tournoi:hover {
+    background-color: #45a049;
+}
+
+.tournois-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.tournoi-card {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.tournoi-title {
+    color: #4CAF50;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.tournoi-info {
+    margin-bottom: 20px;
+}
+
+.tournoi-info p {
+    margin: 8px 0;
+}
+
+.tournoi-info .description {
+    font-style: italic;
+    margin-top: 15px;
+    color: #cccccc;
+}
+
+.btn-register {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-register:hover {
+    background-color: #45a049;
+}
+
+.btn-register:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.btn-unregister {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-unregister:hover {
+    background-color: #d32f2f;
+}
+
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-delete:hover {
+    background-color: #d32f2f;
+}
+
+.login-required {
+    color: #f2f2f2;
+    text-align: center;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #333333;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    color: white;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    color: #4CAF50;
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    background-color: #444444;
+    color: white;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-ajt {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-ajt:hover {
+    background-color: #45a049;
+}
+
+.btn-annuler {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-annuler:hover {
+    background-color: #d32f2f;
+}
+
+.confirmation-message {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.delete-confirmation {
+    background-color: rgba(244, 67, 54, 0.2);
+    border: 1px solid #f44336;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.delete-confirmation p {
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-confirm {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #555555;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Ajout de style pour correspondre à la maquette */
+body {
+    background-color: #121212;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
 
 
