@@ -8,30 +8,30 @@ function Login({ setUser }) {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
-    
+
     // Modified initialization to ensure default users are always available
     const [users, setUsers] = useState(() => {
         const defaultUsers = [
             { username: 'user', password: 'user', role: 'user' },
             { username: 'admin', password: 'admin', role: 'admin' }
         ];
-        
+
         try {
             const savedUsers = localStorage.getItem('users');
             const parsedUsers = savedUsers ? JSON.parse(savedUsers) : [];
-            
+
             // Ensure admin and soufiane users always exist
             const adminExists = parsedUsers.some(u => u.username === 'admin');
             const soufianeExists = parsedUsers.some(u => u.username === 'soufiane');
-            
+
             if (!adminExists) {
                 parsedUsers.push({ username: 'admin', password: 'admin', role: 'admin' });
             }
-            
+
             if (!soufianeExists) {
                 parsedUsers.push({ username: 'soufiane', password: 'soufiane', role: 'user' });
             }
-            
+
             return parsedUsers.length > 0 ? parsedUsers : defaultUsers;
         } catch (error) {
             console.error("Error loading users from localStorage:", error);
@@ -61,7 +61,7 @@ function Login({ setUser }) {
             const user = users.find(
                 u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
             );
-            
+
             if (user) {
                 const userData = { username: user.username, role: user.role };
                 setUser(userData);
@@ -94,10 +94,10 @@ function Login({ setUser }) {
                 return;
             }
 
-            const newUser = { 
-                username, 
-                password, 
-                email, 
+            const newUser = {
+                username,
+                password,
+                email,
                 phone,
                 role: 'user' // Ensure new users have a role assigned
             };
@@ -134,7 +134,7 @@ function Login({ setUser }) {
                 {error && <p className={error.includes('succès') || error.includes('réinitialisés') ? 'success-message' : 'error'}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label>Nom d'utilisateur</label>
+                        <label><i className="fas fa-user"></i> Nom d'utilisateur</label>
                         <input
                             type="text"
                             value={username}
@@ -147,7 +147,7 @@ function Login({ setUser }) {
                     {!isLogin && (
                         <>
                             <div>
-                                <label>Email</label>
+                                <label><i className="fas fa-envelope"></i> Email</label>
                                 <input
                                     type="email"
                                     value={email}
@@ -157,7 +157,7 @@ function Login({ setUser }) {
                                 />
                             </div>
                             <div>
-                                <label>Numéro de téléphone</label>
+                                <label><i className="fas fa-phone"></i> Numéro de téléphone</label>
                                 <input
                                     type="tel"
                                     value={phone}
@@ -170,7 +170,7 @@ function Login({ setUser }) {
                     )}
 
                     <div>
-                        <label>Mot de passe</label>
+                        <label><i className="fas fa-lock"></i> Mot de passe</label>
                         <input
                             type="password"
                             value={password}
@@ -207,18 +207,18 @@ function Login({ setUser }) {
                         </span>
                     </p>
                 </div>
-                
+
                 {/* Dev tool - can be removed in production */}
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <button 
-                        onClick={resetUsers} 
-                        style={{ 
-                            background: 'none', 
-                            border: '1px solid #666', 
-                            padding: '5px 10px', 
+                    <button
+                        onClick={resetUsers}
+                        style={{
+                            background: 'none',
+                            border: '1px solid #666',
+                            padding: '5px 10px',
                             fontSize: '12px',
                             cursor: 'pointer',
-                            color: '#666' 
+                            color: '#666'
                         }}
                     >
                         Réinitialiser les utilisateurs

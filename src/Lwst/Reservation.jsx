@@ -4,6 +4,7 @@ import LoginPrompt from './LoginPrompt';
 function Reservation({ reservations, deleteReservation, modifyReservation, acceptReservation, user }) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         id: null,
         name: '',
@@ -15,6 +16,15 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [reservationToDelete, setReservationToDelete] = useState(null);
     const [deletionMessage, setDeletionMessage] = useState('');
+    const [paymentForm, setPaymentForm] = useState({
+        cardNumber: '',
+        cardName: '',
+        expiryDate: '',
+        cvv: '',
+        amount: '',
+        reservationId: ''
+    });
+    const [paymentStatus, setPaymentStatus] = useState({});
 
     // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
     if (!user) {
@@ -22,12 +32,12 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
     }
 
     // Filtrer les réservations en fonction du rôle de l'utilisateur
-    const displayedReservations = user.role === 'admin' 
+    const displayedReservations = user.role === 'admin'
         ? reservations  // Afficher toutes les réservations pour l'admin
         : reservations.filter(res => res.userId === user.username);  // Filtrer pour l'utilisateur standard
 
     const handleModifyClick = (reservation) => {
-        setFormData({...reservation});
+        setFormData({ ...reservation });
         setIsEditModalOpen(true);
     };
 
@@ -38,7 +48,7 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
 
     const confirmDelete = () => {
         deleteReservation(reservationToDelete);
-        
+
         setDeletionMessage('Réservation supprimée avec succès.');
         setTimeout(() => {
             setDeletionMessage('');
@@ -69,15 +79,15 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         // Prepare the updated reservation data
         const updatedReservation = {
             ...formData,
             accepted: formData.accepted === 'true' || formData.accepted === true
         };
-        
+
         modifyReservation(updatedReservation);
-        
+
         setConfirmationMessage('Réservation modifiée avec succès.');
         setTimeout(() => {
             setConfirmationMessage('');
@@ -93,6 +103,43 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
         }, 5000);
     };
 
+    const handlePaymentClick = (reservation) => {
+        setPaymentForm({
+            ...paymentForm,
+            reservationId: reservation.id,
+            amount: reservation.terrainPrice // Utilisation du prix du terrain
+        });
+        setIsPaymentModalOpen(true);
+    };
+
+    const handlePaymentChange = (e) => {
+        const { name, value } = e.target;
+        setPaymentForm({
+            ...paymentForm,
+            [name]: value
+        });
+    };
+
+    const handlePaymentSubmit = (e) => {
+        e.preventDefault();
+        const reservationId = paymentForm.reservationId;
+        setPaymentStatus(prev => ({
+            ...prev,
+            [reservationId]: 'success'
+        }));
+        setTimeout(() => {
+            setIsPaymentModalOpen(false);
+            setPaymentForm({
+                cardNumber: '',
+                cardName: '',
+                expiryDate: '',
+                cvv: '',
+                amount: '',
+                reservationId: ''
+            });
+        }, 2000);
+    };
+
     const today = new Date().toISOString().split('T')[0];
     const timeSlots = [
         "09:00-10:00", "10:00-11:00", "11:00-12:00",
@@ -104,8 +151,8 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
     return (
         <div className="reservation-container">
             <h1>
-                {user.role === 'admin' 
-                    ? 'Toutes les Réservations' 
+                {user.role === 'admin'
+                    ? 'Toutes les Réservations'
                     : 'Historique des Réservations'}
             </h1>
             {confirmationMessage && (
@@ -118,16 +165,16 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                     {deletionMessage}
                 </div>
             )}
-            
+
             <table className="reservation-table">
                 <thead>
                     <tr>
                         <th>Nom</th>
                         <th>Date</th>
                         <th>Plage Horaire</th>
-                        <th>Statut</th>
                         {user.role === 'admin' && <th>Utilisateur</th>}
                         <th>Actions</th>
+                        <th>Paiement</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -143,7 +190,6 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                                 <td>{reservation.name}</td>
                                 <td>{reservation.date}</td>
                                 <td>{reservation.timeSlot}</td>
-                                <td>{reservation.accepted ? 'Acceptée' : 'En attente'}</td>
                                 {user.role === 'admin' && <td>{reservation.userId || 'Non assigné'}</td>}
                                 <td className="actions">
                                     <button onClick={() => handleModifyClick(reservation)} className="btn-modify">
@@ -158,6 +204,21 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                                         </button>
                                     )}
                                 </td>
+                                <td className="payment-cell">
+                                    {!paymentStatus[reservation.id] && (
+                                        <button
+                                            onClick={() => handlePaymentClick(reservation)}
+                                            className="btn-payment"
+                                        >
+                                            <i className="fas fa-credit-card"></i> Payer
+                                        </button>
+                                    )}
+                                    {paymentStatus[reservation.id] === 'success' && (
+                                        <span className="payment-success">
+                                            <i className="fas fa-check-circle"></i> Paiement Réussi
+                                        </span>
+                                    )}
+                                </td>
                             </tr>
                         ))
                     )}
@@ -170,27 +231,27 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                         <h2>Modifier Réservation</h2>
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <label>Nom:</label>
+                                <label><i className="fas fa-user"></i> Nom:</label>
                                 <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-                            </div>                
+                            </div>
                             <div className="form-group">
-                                <label>Date de Réservation:</label>
+                                <label><i className="fas fa-calendar-alt"></i> Date de Réservation:</label>
                                 <input type="date" name="date" min={today} value={formData.date} onChange={handleChange} required />
                             </div>
                             <div className="form-group">
-                                <label>Plage Horaire:</label>
+                                <label><i className="fas fa-clock"></i> Plage Horaire:</label>
                                 <select name="timeSlot" value={formData.timeSlot || ''} onChange={handleChange} required>
                                     <option value="" disabled>Choisir une heure</option>
                                     {timeSlots.map(slot => {
                                         const isReserved = reservations.some(
-                                            reservation => 
-                                                reservation.date === formData.date && 
+                                            reservation =>
+                                                reservation.date === formData.date &&
                                                 reservation.timeSlot === slot &&
                                                 reservation.id !== formData.id
                                         );
                                         return (
-                                            <option 
-                                                key={slot} 
+                                            <option
+                                                key={slot}
                                                 value={slot}
                                                 disabled={isReserved}
                                             >
@@ -203,27 +264,16 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                             {user.role === 'admin' && (
                                 <div className="form-group">
                                     <label>Utilisateur:</label>
-                                    <input 
-                                        type="text" 
-                                        name="userId" 
-                                        value={formData.userId || ''} 
-                                        onChange={handleChange} 
-                                        readOnly={formData.userId !== user.username} 
+                                    <input
+                                        type="text"
+                                        name="userId"
+                                        value={formData.userId || ''}
+                                        onChange={handleChange}
+                                        readOnly={formData.userId !== user.username}
                                     />
                                 </div>
                             )}
-                            <div className="form-group">
-                                <label>Statut:</label>
-                                <select 
-                                    name="accepted" 
-                                    value={formData.accepted === true || formData.accepted === 'true' ? 'true' : 'false'} 
-                                    onChange={handleChange}
-                                    disabled={user.role !== 'admin'}
-                                >
-                                    <option value="false">En attente</option>
-                                    <option value="true">Acceptée</option>
-                                </select>
-                            </div>
+
                             <div className="modal-actions">
                                 <button type="submit" className="btn-modify">
                                     <i className="fas fa-check"></i> Enregistrer
@@ -249,6 +299,99 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                                 <i className="fas fa-times"></i> Annuler
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {isPaymentModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Paiement</h2>
+                        <form onSubmit={handlePaymentSubmit} className="tournoi-form">
+                            <div className="form-group">
+                                <label>Numéro de carte:</label>
+                                <input
+                                    type="text"
+                                    name="cardNumber"
+                                    value={paymentForm.cardNumber}
+                                    onChange={handlePaymentChange}
+                                    required
+                                    placeholder="1234 5678 9012 3456"
+                                    maxLength="19"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Nom sur la carte:</label>
+                                <input
+                                    type="text"
+                                    name="cardName"
+                                    value={paymentForm.cardName}
+                                    onChange={handlePaymentChange}
+                                    required
+                                    placeholder="JEAN DUPONT"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Date d'expiration:</label>
+                                <input
+                                    type="text"
+                                    name="expiryDate"
+                                    value={paymentForm.expiryDate}
+                                    onChange={handlePaymentChange}
+                                    required
+                                    placeholder="MM/AA"
+                                    maxLength="5"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>CVV:</label>
+                                <input
+                                    type="text"
+                                    name="cvv"
+                                    value={paymentForm.cvv}
+                                    onChange={handlePaymentChange}
+                                    required
+                                    placeholder="123"
+                                    maxLength="3"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Montant à payer:</label>
+                                <input
+                                    type="text"
+                                    name="amount"
+                                    value={`${paymentForm.amount} DT`}
+                                    readOnly
+                                    className="readonly-input"
+                                />
+                            </div>
+                            <div className="modal-actions">
+                                <button
+                                    type="submit"
+                                    className={`btn-modify ${paymentStatus[paymentForm.reservationId] === 'success' ? 'success' : ''}`}
+                                    disabled={paymentStatus[paymentForm.reservationId] === 'success'}
+                                >
+                                    <i className="fas fa-credit-card"></i> Payer
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn"
+                                    onClick={() => {
+                                        setIsPaymentModalOpen(false);
+                                        setPaymentForm({
+                                            cardNumber: '',
+                                            cardName: '',
+                                            expiryDate: '',
+                                            cvv: '',
+                                            amount: '',
+                                            reservationId: ''
+                                        });
+                                    }}
+                                >
+                                    <i className="fas fa-times"></i> Annuler
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

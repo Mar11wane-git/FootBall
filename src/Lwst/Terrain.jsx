@@ -39,24 +39,28 @@ function Terrain({ addReservation, reservations, user }) {
                 photo: 'tr1.jpg',
                 Title: 'Terrain 1 - Gazon Synthétique',
                 description: 'Terrain de dernière génération avec gazon synthétique haute qualité.',
+                price: '50'
             },
             {
                 id: 2,
                 photo: 'tr1.jpg',
                 Title: 'Terrain 2 - Gazon Naturel',
                 description: 'Profitez de l\'authenticité du gazon naturel pour vos matchs et entraînements.',
+                price: '60'
             },
             {
                 id: 3,
                 photo: 'tr1.jpg',
                 Title: 'Terrain 3 - Gazon Hybride',
                 description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
+                price: '55'
             },
             {
                 id: 4,
                 photo: 'tr1.jpg',
                 Title: 'Terrain 4 - Gazon Hybride',
                 description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
+                price: '55'
             }
         ];
     });
@@ -125,6 +129,7 @@ function Terrain({ addReservation, reservations, user }) {
         const newReservation = {
             id: Date.now(),
             terrainId: selectedTerrain.id,
+            terrainPrice: selectedTerrain.price,
             ...formData
         };
         addReservation(newReservation);
@@ -162,7 +167,7 @@ function Terrain({ addReservation, reservations, user }) {
 
         const newTerrainData = {
             id: newId,
-            photo: newTerrain.photo || 'tr1.jpg',  // Photo par défaut si non spécifiée
+            photo: newTerrain.photo || 'tr1.jpg',
             Title: newTerrain.title,
             description: newTerrain.description,
             price: newTerrain.price
@@ -242,60 +247,72 @@ function Terrain({ addReservation, reservations, user }) {
             {/* Section Admin pour ajouter des terrains */}
             {isAdmin && (
                 <div className="admin-controls">
-                    <button
-                        className="btn-ajt"
-                        onClick={() => setShowAddTerrainForm(!showAddTerrainForm)}
-                    >
-                        {showAddTerrainForm ? 'Annuler' : 'Ajouter un nouveau terrain'}
-                    </button>
+                    {!showAddTerrainForm && (
+                        <button
+                            className="btn-ajt"
+                            onClick={() => setShowAddTerrainForm(true)}
+                        >
+                            <i className="fas fa-plus"></i> Ajouter un nouveau terrain
+                        </button>
+                    )}
 
                     {showAddTerrainForm && (
-                        <div className="add-terrain-form">
-                            <h3>Ajouter un nouveau terrain</h3>
-                            <form onSubmit={handleAddTerrain}>
-                                <div>
-                                    <label>Titre:</label>
-                                    <input
-                                        type="text"
-                                        name="title"
-                                        value={newTerrain.title}
-                                        onChange={handleNewTerrainChange}
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label>Description:</label>
-                                    <textarea
-                                        name="description"
-                                        value={newTerrain.description}
-                                        onChange={handleNewTerrainChange}
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label>Prix (€/heure):</label>
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        value={newTerrain.price}
-                                        onChange={handleNewTerrainChange}
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label>URL de la photo:</label>
-                                    <input
-                                        type="text"
-                                        name="photo"
-                                        value={newTerrain.photo}
-                                        onChange={handleNewTerrainChange}
-                                        placeholder="tr1.jpg"
-                                    />
-                                </div>
-                                <button type="submit" className="btn-ajt">
-                                    <i className="fas fa-plus"></i> Ajouter le terrain
-                                </button>
-                            </form>
+                        <div className="modal">
+                            <div className="modal-content">
+                                <h2>Ajouter un nouveau terrain</h2>
+                                <form onSubmit={handleAddTerrain} className="tournoi-form">
+                                    <div className="form-group">
+                                        <label>Titre:</label>
+                                        <input
+                                            type="text"
+                                            name="title"
+                                            value={newTerrain.title}
+                                            onChange={handleNewTerrainChange}
+                                            required
+                                            placeholder="Nom du terrain"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Description:</label>
+                                        <textarea
+                                            name="description"
+                                            value={newTerrain.description}
+                                            onChange={handleNewTerrainChange}
+                                            required
+                                            placeholder="Description détaillée du terrain"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Prix (€/heure):</label>
+                                        <input
+                                            type="number"
+                                            name="price"
+                                            value={newTerrain.price}
+                                            onChange={handleNewTerrainChange}
+                                            required
+                                            placeholder="Ex: 50"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>URL de la photo:</label>
+                                        <input
+                                            type="text"
+                                            name="photo"
+                                            value={newTerrain.photo}
+                                            onChange={handleNewTerrainChange}
+                                            placeholder="tr1.jpg"
+                                        />
+                                    </div>
+                                    <div className="modal-actions">
+                                        <button type="submit" className="btn-modify">
+                                            <i className="fas fa-plus"></i> Ajouter
+                                        </button>
+                                        <button type="button" className="btn" onClick={() => setShowAddTerrainForm(false)}>
+                                            <i className="fas fa-times"></i> Annuler
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -314,8 +331,9 @@ function Terrain({ addReservation, reservations, user }) {
                         <div className="terrain-content">
                             <h3>{e.Title}</h3>
                             <p>{e.description}</p>
+                            <div className="price">Prix: {e.price} DT</div>
                             <div className="terrain-actions">
-                                <Link to={`/terrain/${e.id}`}>
+                                <Link to={`/terrain/${e.id}?price=${e.price}`}>
                                     <button className='btnn'>
                                         <i className="fas fa-eye"></i> Voir Détail
                                     </button>
@@ -328,7 +346,7 @@ function Terrain({ addReservation, reservations, user }) {
                                 )}
 
                                 {isAdmin && (
-                                    <button className='btn' onClick={() => handleDeleteConfirmation(e.id)}>
+                                    <button className='btnnn' onClick={() => handleDeleteConfirmation(e.id)}>
                                         <i className="fas fa-trash"></i> Supprimer
                                     </button>
                                 )}

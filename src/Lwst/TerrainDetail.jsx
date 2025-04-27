@@ -89,6 +89,7 @@ function TerrainDetail({ addReservation, reservations, user }) {
             id: Date.now(),
             terrainId: terrain.id,
             terrainTitle: terrain.Title,
+            terrainPrice: terrain.price,
             ...formData
         };
         addReservation(newReservation);
@@ -124,8 +125,6 @@ function TerrainDetail({ addReservation, reservations, user }) {
         <div className="terrain-detail">
             {showLoginPrompt && <LoginPrompt />}
 
-
-
             <div className="terrain-content">
                 <div className="terrain-image-container">
                     <img
@@ -151,7 +150,7 @@ function TerrainDetail({ addReservation, reservations, user }) {
                             <li><strong>Dimensions:</strong> 40m x 20m</li>
                             <li><strong>Éclairage:</strong> Système LED</li>
                             <li><strong>Disponibilité:</strong> 9h00 - 22h00</li>
-                            <li><strong>Prix:</strong> <span className="price">{terrain.price || '150'} DH/heure</span></li>
+                            <li><strong>Prix:</strong> <span className="price">{terrain.price} DT/heure</span></li>
                         </ul>
                     </div>
 

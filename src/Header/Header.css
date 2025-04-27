@@ -1,41 +1,45 @@
-.all{
+.all {
     background-color: black;
     display: flex;
     position: relative;
     width: 100%;
     padding: 15px;
     right: 15px;
-    bottom:12px  ;
+    bottom: 12px;
     text-decoration: none;
 }
-.T{
-    
+
+.T {
+
     color: white;
     display: flex;
     font-family: Arial, Helvetica, sans-serif;
-    font-size:35px ;
+    font-size: 35px;
     padding: 7px;
     position: relative;
     text-decoration: none;
 
 }
-.a{
+
+.a {
     display: flex;
     gap: 30px;
     align-items: center;
-    
+
     position: relative;
     margin-left: auto;
-    
+
 }
-.c{
+
+.c {
     color: azure;
     font-size: 20px;
     text-decoration: none;
     width: 96px;
-    
+
 }
-.c:hover{
+
+.c:hover {
     line-height: 10px;
     color: lightgray;
 }
@@ -118,6 +122,7 @@
         margin: 1rem 0;
     }
 }
+
 /* Styles pour les boutons d'authentification dans le header */
 .auth-button {
     display: flex;
@@ -134,7 +139,7 @@
 }
 
 .login-button {
-    background-color: #4CAF50; /* Vert */
+    background-color: #4CAF50;
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
@@ -145,19 +150,18 @@
     align-items: center;
     gap: 5px;
     transition: all 0.3s ease;
-    text-decoration: none; /* Supprime le soulignement */
-    display: inline-block; /* Assure qu'il ne se comporte pas comme un lien */
+    text-decoration: none;
 }
 
-
 .login-button:hover {
-    background-color: #45a049; /* Vert foncé */
+    background-color: #45a049;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
 }
 
 .logout-button {
-    background-color: #f44336; /* Rouge */
+    background-color: #f44336;
+    /* Rouge */
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
@@ -171,7 +175,8 @@
 }
 
 .logout-button:hover {
-    background-color: #d32f2f; /* Rouge foncé */
+    background-color: #d32f2f;
+    /* Rouge foncé */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
 }
@@ -189,9 +194,11 @@
     0% {
         transform: translateX(0);
     }
+
     50% {
         transform: translateX(-3px);
     }
+
     100% {
         transform: translateX(0);
     }
@@ -245,3 +252,6 @@
     }
 }
 
+.auth-button a {
+    text-decoration: none;
+}

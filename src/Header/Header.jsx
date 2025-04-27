@@ -52,7 +52,7 @@ function Header({ user, logout }) {
                 ) : (
                     <Link to="/login">
                         <button className="login-button">
-                            <i className="fas fa-user"></i>
+                            <i className="fas fa-user"></i> Se connecter
                         </button>
                     </Link>
                 )}
