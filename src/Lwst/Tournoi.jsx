@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import LoginPrompt from './LoginPrompt';
+import { Link } from 'react-router-dom';
 
-function Tournoi({ user }) {
+function Tournoi({ user, tournois, setTournois }) {
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
     const [isAddTournoiModalOpen, setIsAddTournoiModalOpen] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
     const [selectedTournoi, setSelectedTournoi] = useState(null);
     const [formData, setFormData] = useState({
         teamName: '',
@@ -26,51 +28,12 @@ function Tournoi({ user }) {
         const saved = localStorage.getItem('registeredTeams');
         return saved ? JSON.parse(saved) : {};
     });
-    const [tournois, setTournois] = useState(() => {
-        const saved = localStorage.getItem('tournois');
-        return saved ? JSON.parse(saved) : [
-            {
-                id: 1,
-                name: "Coupe de la Ville",
-                date: "2024-04-15",
-                maxTeams: 16,
-                registeredTeams: 8,
-                prizePool: "10000 DH",
-                description: "Tournoi annuel opposant les meilleures équipes",
-                format: "Élimination directe",
-                entryFee: "500 DH"
-            },
-            {
-                id: 2,
-                name: "Championnat Amateur",
-                date: "2024-05-01",
-                maxTeams: 12,
-                registeredTeams: 6,
-                prizePool: "5000 DH",
-                description: "Tournoi réservé aux équipes amateurs",
-                format: "Phase de groupes + Élimination directe",
-                entryFee: "300 DH"
-            },
-            {
-                id: 3,
-                name: "Tournoi Ramadan",
-                date: "2024-03-20",
-                maxTeams: 20,
-                registeredTeams: 12,
-                prizePool: "15000 DH",
-                description: "Grand tournoi nocturne pendant le mois de Ramadan",
-                format: "Phase de groupes + Élimination directe",
-                entryFee: "600 DH"
-            }
-        ];
-    });
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [deleteConfirmationId, setDeleteConfirmationId] = useState(null);
 
     useEffect(() => {
         localStorage.setItem('registeredTeams', JSON.stringify(registeredTeams));
-        localStorage.setItem('tournois', JSON.stringify(tournois));
-    }, [registeredTeams, tournois]);
+    }, [registeredTeams]);
 
     const handleRegisterClick = (tournoi) => {
         if (!user) {
@@ -94,6 +57,8 @@ function Tournoi({ user }) {
 
     const handleCloseTournoiModal = () => {
         setIsAddTournoiModalOpen(false);
+        setIsEditMode(false);
+        setSelectedTournoi(null);
         setTournoiFormData({
             name: '',
             date: '',
@@ -124,62 +89,166 @@ function Tournoi({ user }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const updatedTeams = {
-            ...registeredTeams,
-            [selectedTournoi.id]: true
-        };
-        setRegisteredTeams(updatedTeams);
-
-        setConfirmationMessage('Votre équipe a été inscrite avec succès au tournoi !');
-        handleCloseModal();
+        
+        // Enregistrer l'équipe pour ce tournoi
+        setRegisteredTeams(prev => ({
+            ...prev,
+            [selectedTournoi.id]: formData
+        }));
+        
+        // Mettre à jour le tournoi
+        setTournois(prevTournois => 
+            prevTournois.map(tournoi => 
+                tournoi.id === selectedTournoi.id 
+                    ? { 
+                        ...tournoi, 
+                        registered: true,
+                        registeredTeams: (tournoi.registeredTeams || 0) + 1,
+                        teams: [
+                            ...(tournoi.teams || []),
+                            {
+                                id: Date.now(),
+                                name: formData.teamName,
+                                captain: formData.captainName,
+                                players: 5,
+                                registrationDate: new Date().toISOString().split('T')[0]
+                            }
+                        ]
+                    } 
+                    : tournoi
+            )
+        );
+        
+        setConfirmationMessage('Inscription réussie!');
         setTimeout(() => {
             setConfirmationMessage('');
-        }, 5000);
+        }, 3000);
+        
+        setIsRegistrationModalOpen(false);
+        setFormData({
+            teamName: '',
+            captainName: '',
+            phoneNumber: '',
+            email: ''
+        });
+    };
+
+    const handleEditClick = (tournoi) => {
+        setTournoiFormData({ ...tournoi });
+        setSelectedTournoi(tournoi);
+        setIsEditMode(true);
+        setIsAddTournoiModalOpen(true);
+    };
+
+    const handleEditTournoi = (e) => {
+        e.preventDefault();
+
+        setTournois(prevTournois => 
+            prevTournois.map(tournoi => 
+                tournoi.id === selectedTournoi.id ? { ...tournoiFormData } : tournoi
+            )
+        );
+
+        setConfirmationMessage('Tournoi modifié avec succès!');
+        setTimeout(() => {
+            setConfirmationMessage('');
+        }, 3000);
+        
+        setIsAddTournoiModalOpen(false);
+        setIsEditMode(false);
+        setSelectedTournoi(null);
     };
 
     const handleAddTournoi = (e) => {
         e.preventDefault();
 
         const newTournoi = {
-            ...tournoiFormData,
             id: Date.now(),
-            registeredTeams: parseInt(tournoiFormData.registeredTeams) || 0,
-            maxTeams: parseInt(tournoiFormData.maxTeams) || 0
+            ...tournoiFormData,
+            teams: []
         };
 
-        setTournois([...tournois, newTournoi]);
-        setConfirmationMessage('Nouveau tournoi ajouté avec succès !');
-        handleCloseTournoiModal();
+        setTournois(prevTournois => [...prevTournois, newTournoi]);
+        
+        setConfirmationMessage('Tournoi ajouté avec succès!');
         setTimeout(() => {
             setConfirmationMessage('');
-        }, 5000);
+        }, 3000);
+        
+        setIsAddTournoiModalOpen(false);
+        setTournoiFormData({
+            name: '',
+            date: '',
+            maxTeams: '',
+            registeredTeams: 0,
+            prizePool: '',
+            description: '',
+            format: '',
+            entryFee: ''
+        });
     };
 
     const handleDeleteTournoi = (id) => {
-        const updatedTournois = tournois.filter(tournoi => tournoi.id !== id);
-        setTournois(updatedTournois);
-
-        // Supprimer également les inscriptions associées
-        const updatedTeams = { ...registeredTeams };
-        delete updatedTeams[id];
-        setRegisteredTeams(updatedTeams);
-
-        setConfirmationMessage('Tournoi supprimé avec succès.');
-        setDeleteConfirmationId(null);
+        setTournois(prevTournois => 
+            prevTournois.filter(tournoi => tournoi.id !== id)
+        );
+        
+        setConfirmationMessage('Tournoi supprimé avec succès!');
         setTimeout(() => {
             setConfirmationMessage('');
-        }, 5000);
+        }, 3000);
+        
+        setDeleteConfirmationId(null);
     };
 
     const handleUnregister = (tournoiId) => {
-        const updatedTeams = { ...registeredTeams };
-        delete updatedTeams[tournoiId];
-        setRegisteredTeams(updatedTeams);
-
-        setConfirmationMessage('Votre inscription a été annulée.');
+        // Supprimer l'inscription
+        const updatedRegisteredTeams = { ...registeredTeams };
+        delete updatedRegisteredTeams[tournoiId];
+        setRegisteredTeams(updatedRegisteredTeams);
+        
+        // Trouver le tournoi
+        const tournoi = tournois.find(t => t.id === tournoiId);
+        if (!tournoi) return;
+        
+        // Trouver l'équipe à supprimer (basée sur l'utilisateur)
+        const userTeam = tournoi.teams?.find(team => 
+            user && (team.email === user.email || team.captain === user.username)
+        );
+        
+        if (!userTeam) {
+            // Si l'équipe n'est pas trouvée, simplement mettre à jour le statut
+            setTournois(prevTournois => 
+                prevTournois.map(t => 
+                    t.id === tournoiId 
+                        ? { 
+                            ...t, 
+                            registered: false,
+                            registeredTeams: Math.max(0, t.registeredTeams - 1) 
+                        } 
+                        : t
+                )
+            );
+        } else {
+            // Supprimer l'équipe du tableau des équipes
+            setTournois(prevTournois => 
+                prevTournois.map(t => 
+                    t.id === tournoiId 
+                        ? { 
+                            ...t, 
+                            registered: false,
+                            registeredTeams: Math.max(0, t.registeredTeams - 1),
+                            teams: t.teams?.filter(team => team.id !== userTeam.id) || []
+                        } 
+                        : t
+                )
+            );
+        }
+        
+        setConfirmationMessage('Désinscription réussie!');
         setTimeout(() => {
             setConfirmationMessage('');
-        }, 5000);
+        }, 3000);
     };
 
     return (
@@ -189,10 +258,10 @@ function Tournoi({ user }) {
                 <h1>Tournois Disponibles</h1>
                 {user && user.role === 'admin' && (
                     <button
-                        className="btn-add-tournoi"
+                        className="btn-ajt"
                         onClick={() => setIsAddTournoiModalOpen(true)}
                     >
-                        <i className="fas fa-plus"></i> Ajouter un tournoi
+                        <i className="fas fa-plus"></i> Ajouter un nouveau tournoi
                     </button>
                 )}
             </div>
@@ -202,60 +271,69 @@ function Tournoi({ user }) {
                     <div key={tournoi.id} className="tournoi-card">
                         <h2 className="tournoi-title">{tournoi.name}</h2>
                         <div className="tournoi-info">
-                            <p><strong>Date:</strong> {tournoi.date}</p>
-                            <p><strong>Équipes:</strong> {tournoi.registeredTeams}/{tournoi.maxTeams}</p>
+                            <p><i className="fas fa-calendar-alt"></i> Date: {tournoi.date}</p>
+                            <p><i className="fas fa-users"></i> Équipes: {tournoi.teams ? tournoi.teams.length : 0}/{tournoi.maxTeams}</p>
                             <p><strong>Prix:</strong> {tournoi.prizePool}</p>
                             <p><strong>Format:</strong> {tournoi.format}</p>
                             <p><strong>Frais d'inscription:</strong> {tournoi.entryFee}</p>
                             <p className="description">{tournoi.description}</p>
                         </div>
 
-                        {user && user.role === 'admin' ? (
-                            deleteConfirmationId === tournoi.id ? (
-                                <div className="delete-confirmation">
-                                    <p>Êtes-vous sûr de vouloir supprimer ce tournoi ?</p>
-                                    <div className="confirmation-buttons">
+                        {user ? (
+                            <div className="tournoi-actions">
+                                {tournoi.registered ? (
+                                    <>
                                         <button
-                                            className="btn-confirm"
+                                            className="btn-unregister"
+                                            onClick={() => handleUnregister(tournoi.id)}
+                                        >
+                                            <i className="fas fa-user-minus"></i> Se désinscrire
+                                        </button>
+                                        <Link to={`/tournoi/${tournoi.id}`} className="btn-view-details">
+                                            <i className="fas fa-info-circle"></i> Voir les détails
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            className="btn-register"
+                                            onClick={() => handleRegisterClick(tournoi)}
+                                            disabled={tournoi.teams && tournoi.teams.length >= tournoi.maxTeams}
+                                        >
+                                            <i className="fas fa-user-plus"></i> S'inscrire
+                                        </button>
+                                        <Link to={`/tournoi/${tournoi.id}`} className="btn-view-details">
+                                            <i className="fas fa-info-circle"></i> Voir les détails
+                                        </Link>
+                                    </>
+                                )}
+                                
+                                {user.role === 'admin' && (
+                                    <div className="admin-actions">
+                                        <button
+                                            className="btn-modify"
+                                            onClick={() => handleEditClick(tournoi)}
+                                        >
+                                            <i className="fas fa-edit"></i> Modifier
+                                        </button>
+                                        <button
+                                            className="btn-delete"
                                             onClick={() => handleDeleteTournoi(tournoi.id)}
                                         >
-                                            Confirmer
-                                        </button>
-                                        <button
-                                            className="btn-cancel"
-                                            onClick={() => setDeleteConfirmationId(null)}
-                                        >
-                                            Annuler
+                                            <i className="fas fa-trash-alt"></i> Supprimer
                                         </button>
                                     </div>
-                                </div>
-                            ) : (
-                                <button
-                                    className="btn-delete"
-                                    onClick={() => setDeleteConfirmationId(tournoi.id)}
-                                >
-                                    <i className="fas fa-trash"></i> Supprimer
-                                </button>
-                            )
-                        ) : user ? (
-                            registeredTeams[tournoi.id] ? (
-                                <button
-                                    className="btn-unregister"
-                                    onClick={() => handleUnregister(tournoi.id)}
-                                >
-                                    Annuler l'inscription
-                                </button>
-                            ) : (
-                                <button
-                                    className="btn-register"
-                                    onClick={() => handleRegisterClick(tournoi)}
-                                    disabled={tournoi.registeredTeams >= tournoi.maxTeams}
-                                >
-                                    {tournoi.registeredTeams >= tournoi.maxTeams ? 'Complet' : "S'inscrire"}
-                                </button>
-                            )
+                                )}
+                            </div>
                         ) : (
-                            <p className="login-required">Connectez-vous pour vous inscrire au tournoi</p>
+                            <>
+                                <div className="login-required">
+                                    <i className="fas fa-lock"></i> Connectez-vous pour participer à ce tournoi.
+                                </div>
+                                <Link to={`/tournoi/${tournoi.id}`} className="btn-view-details">
+                                    <i className="fas fa-info-circle"></i> Voir les détails
+                                </Link>
+                            </>
                         )}
                     </div>
                 ))}
@@ -322,8 +400,8 @@ function Tournoi({ user }) {
             {isAddTournoiModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h2>Ajouter un nouveau tournoi</h2>
-                        <form onSubmit={handleAddTournoi} className="tournoi-form">
+                        <h2>{isEditMode ? 'Modifier le tournoi' : 'Ajouter un nouveau tournoi'}</h2>
+                        <form onSubmit={isEditMode ? handleEditTournoi : handleAddTournoi} className="tournoi-form">
                             <div className="form-group">
                                 <label>Nom du tournoi:</label>
                                 <input
@@ -343,18 +421,26 @@ function Tournoi({ user }) {
                                     value={tournoiFormData.date}
                                     onChange={handleTournoiChange}
                                     required
+                                    min={new Date().toISOString().split('T')[0]}
                                 />
                             </div>
                             <div className="form-group">
                                 <label>Nombre maximum d'équipes:</label>
-                                <input
-                                    type="number"
+                                <select
                                     name="maxTeams"
                                     value={tournoiFormData.maxTeams}
                                     onChange={handleTournoiChange}
                                     required
-                                    min="1"
-                                />
+                                    className="form-select"
+                                >
+                                    <option value="" disabled>Choisir le nombre d'équipes</option>
+                                    <option value="8">8 équipes</option>
+                                    <option value="12">12 équipes</option>
+                                    <option value="16">16 équipes</option>
+                                    <option value="20">20 équipes</option>
+                                    <option value="24">24 équipes</option>
+                                    <option value="32">32 équipes</option>
+                                </select>
                             </div>
                             <div className="form-group">
                                 <label>Équipes inscrites:</label>
@@ -368,36 +454,53 @@ function Tournoi({ user }) {
                             </div>
                             <div className="form-group">
                                 <label>Prix (Prize Pool):</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="prizePool"
                                     value={tournoiFormData.prizePool}
                                     onChange={handleTournoiChange}
                                     required
-                                    placeholder="Ex: 10000 DH"
-                                />
+                                    className="form-select"
+                                >
+                                    <option value="" disabled>Choisir le prize pool</option>
+                                    <option value="5000 DH">5000 DH</option>
+                                    <option value="10000 DH">10000 DH</option>
+                                    <option value="15000 DH">15000 DH</option>
+                                    <option value="20000 DH">20000 DH</option>
+                                    <option value="25000 DH">25000 DH</option>
+                                </select>
                             </div>
                             <div className="form-group">
                                 <label>Format:</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="format"
                                     value={tournoiFormData.format}
                                     onChange={handleTournoiChange}
                                     required
-                                    placeholder="Ex: Élimination directe"
-                                />
+                                    className="form-select"
+                                >
+                                    <option value="" disabled>Choisir un format</option>
+                                    <option value="Élimination directe">Élimination directe</option>
+                                    <option value="Phase de groupes + Élimination directe">Phase de groupes + Élimination directe</option>
+                                    <option value="Championnat">Championnat (matchs aller-retour)</option>
+                                    <option value="Coupe">Format Coupe</option>
+                                </select>
                             </div>
                             <div className="form-group">
                                 <label>Frais d'inscription:</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="entryFee"
                                     value={tournoiFormData.entryFee}
                                     onChange={handleTournoiChange}
                                     required
-                                    placeholder="Ex: 500 DH"
-                                />
+                                    className="form-select"
+                                >
+                                    <option value="" disabled>Choisir les frais d'inscription</option>
+                                    <option value="300 DH">300 DH</option>
+                                    <option value="500 DH">500 DH</option>
+                                    <option value="600 DH">600 DH</option>
+                                    <option value="800 DH">800 DH</option>
+                                    <option value="1000 DH">1000 DH</option>
+                                </select>
                             </div>
                             <div className="form-group">
                                 <label>Description:</label>
@@ -410,7 +513,9 @@ function Tournoi({ user }) {
                                 />
                             </div>
                             <div className="modal-actions">
-                                <button type="submit" className="btn-modify">Ajouter</button>
+                                <button type="submit" className="btn-modify">
+                                    {isEditMode ? 'Modifier' : 'Ajouter'}
+                                </button>
                                 <button type="button" className="btn" onClick={handleCloseTournoiModal}>Annuler</button>
                             </div>
                         </form>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginPrompt from './LoginPrompt';
 
-function Terrain({ addReservation, reservations, user }) {
+function Terrain({ addReservation, reservations, user, terrains, addTerrain, deleteTerrain }) {
     const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -24,46 +24,10 @@ function Terrain({ addReservation, reservations, user }) {
         title: '',
         description: '',
         price: '',
-        photo: ''
+        photo: null
     });
 
-    // État pour stocker la liste des terrains
-    const [terrains, setTerrains] = useState(() => {
-        const savedTerrains = localStorage.getItem('terrains');
-        if (savedTerrains) {
-            return JSON.parse(savedTerrains);
-        }
-        return [
-            {
-                id: 1,
-                photo: 'tr1.jpg',
-                Title: 'Terrain 1 - Gazon Synthétique',
-                description: 'Terrain de dernière génération avec gazon synthétique haute qualité.',
-                price: '50'
-            },
-            {
-                id: 2,
-                photo: 'tr1.jpg',
-                Title: 'Terrain 2 - Gazon Naturel',
-                description: 'Profitez de l\'authenticité du gazon naturel pour vos matchs et entraînements.',
-                price: '60'
-            },
-            {
-                id: 3,
-                photo: 'tr1.jpg',
-                Title: 'Terrain 3 - Gazon Hybride',
-                description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
-                price: '55'
-            },
-            {
-                id: 4,
-                photo: 'tr1.jpg',
-                Title: 'Terrain 4 - Gazon Hybride',
-                description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
-                price: '55'
-            }
-        ];
-    });
+    const [previewImage, setPreviewImage] = useState(null);
 
     // État pour ouvrir/fermer le formulaire d'ajout de terrain
     const [showAddTerrainForm, setShowAddTerrainForm] = useState(false);
@@ -107,6 +71,21 @@ function Terrain({ addReservation, reservations, user }) {
             ...newTerrain,
             [name]: value
         });
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImage(reader.result);
+                setNewTerrain(prev => ({
+                    ...prev,
+                    photo: reader.result
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = (e) => {
@@ -173,11 +152,11 @@ function Terrain({ addReservation, reservations, user }) {
             price: newTerrain.price
         };
 
-        const updatedTerrains = [...terrains, newTerrainData];
-        setTerrains(updatedTerrains);
+        addTerrain(newTerrainData);
 
         // Réinitialiser le formulaire
-        setNewTerrain({ title: '', description: '', price: '', photo: '' });
+        setNewTerrain({ title: '', description: '', price: '', photo: null });
+        setPreviewImage(null);
         setConfirmationMessage('Le nouveau terrain a été ajouté avec succès!');
         setShowAddTerrainForm(false);
 
@@ -218,8 +197,7 @@ function Terrain({ addReservation, reservations, user }) {
         }
 
         // Supprimer le terrain
-        const updatedTerrains = terrains.filter(terrain => terrain.id !== terrainToDelete);
-        setTerrains(updatedTerrains);
+        deleteTerrain(terrainToDelete);
 
         // Mettre à jour localStorage
         const updatedRegisteredTerrains = { ...registeredTerrains };
@@ -283,25 +261,29 @@ function Terrain({ addReservation, reservations, user }) {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Prix (€/heure):</label>
+                                        <label>Prix (DH/heure):</label>
                                         <input
                                             type="number"
                                             name="price"
                                             value={newTerrain.price}
                                             onChange={handleNewTerrainChange}
                                             required
-                                            placeholder="Ex: 50"
+                                            placeholder="Ex: 150"
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>URL de la photo:</label>
+                                        <label>Image du terrain:</label>
                                         <input
-                                            type="text"
-                                            name="photo"
-                                            value={newTerrain.photo}
-                                            onChange={handleNewTerrainChange}
-                                            placeholder="tr1.jpg"
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="file-input"
                                         />
+                                        {previewImage && (
+                                            <div className="image-preview">
+                                                <img src={previewImage} alt="Aperçu" style={{ maxWidth: '200px', marginTop: '10px' }} />
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="modal-actions">
                                         <button type="submit" className="btn-modify">
@@ -331,11 +313,11 @@ function Terrain({ addReservation, reservations, user }) {
                         <div className="terrain-content">
                             <h3>{e.Title}</h3>
                             <p>{e.description}</p>
-                            <div className="price">Prix: {e.price} DT</div>
+                            <div className="price">Prix: {e.price} DH</div>
                             <div className="terrain-actions">
                                 <Link to={`/terrain/${e.id}?price=${e.price}`}>
                                     <button className='btnn'>
-                                        <i className="fas fa-eye"></i> Voir Détail
+                                        <i className="fas fa-eye"></i>  Détail
                                     </button>
                                 </Link>
 

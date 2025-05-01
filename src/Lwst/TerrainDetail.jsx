@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LoginPrompt from './LoginPrompt';
 
-function TerrainDetail({ addReservation, reservations, user }) {
+function TerrainDetail({ addReservation, reservations, user, terrains }) {
     const { id } = useParams();
     const navigate = useNavigate();
     const [terrain, setTerrain] = useState(null);
@@ -20,17 +20,13 @@ function TerrainDetail({ addReservation, reservations, user }) {
         return saved ? JSON.parse(saved) : [];
     });
 
-    // Chargement des terrains depuis localStorage
+    // Chargement du terrain depuis les props
     useEffect(() => {
-        const savedTerrains = localStorage.getItem('terrains');
-        if (savedTerrains) {
-            const terrains = JSON.parse(savedTerrains);
-            const foundTerrain = terrains.find(t => t.id === parseInt(id));
-            if (foundTerrain) {
-                setTerrain(foundTerrain);
-            }
+        const foundTerrain = terrains.find(t => t.id === parseInt(id));
+        if (foundTerrain) {
+            setTerrain(foundTerrain);
         }
-    }, [id]);
+    }, [id, terrains]);
 
     useEffect(() => {
         localStorage.setItem('terrainDetailReservations', JSON.stringify(savedReservations));
@@ -128,7 +124,9 @@ function TerrainDetail({ addReservation, reservations, user }) {
             <div className="terrain-content">
                 <div className="terrain-image-container">
                     <img
-                        src={terrain.photo.startsWith('http') ? terrain.photo : `/${terrain.photo}`}
+                        src={terrain.photo.startsWith('data:image') ? terrain.photo : 
+                            terrain.photo.startsWith('http') ? terrain.photo : 
+                            `/${terrain.photo}`}
                         alt={terrain.Title}
                         className="terrain-image"
                     />
@@ -150,7 +148,7 @@ function TerrainDetail({ addReservation, reservations, user }) {
                             <li><strong>Dimensions:</strong> 40m x 20m</li>
                             <li><strong>Éclairage:</strong> Système LED</li>
                             <li><strong>Disponibilité:</strong> 9h00 - 22h00</li>
-                            <li><strong>Prix:</strong> <span className="price">{terrain.price} DT/heure</span></li>
+                            <li><strong>Prix:</strong> <span className="price">{terrain.price} DH/heure</span></li>
                         </ul>
                     </div>
 

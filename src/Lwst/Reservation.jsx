@@ -11,6 +11,7 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
         date: '',
         timeSlot: '',
         accepted: false,
+        rejected: false,
         userId: ''
     });
     const [confirmationMessage, setConfirmationMessage] = useState('');
@@ -24,17 +25,59 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
         amount: '',
         reservationId: ''
     });
-    const [paymentStatus, setPaymentStatus] = useState({});
+    
+    // Nouveau filtre pour les administrateurs
+    const [paymentFilter, setPaymentFilter] = useState('all');
+    
+    // Initialiser le statut de paiement basé sur les données de réservation
+    const initPaymentStatus = () => {
+        const status = {};
+        reservations.forEach(reservation => {
+            if (reservation.isPaid) {
+                status[reservation.id] = 'success';
+            }
+        });
+        return status;
+    };
+    
+    const [paymentStatus, setPaymentStatus] = useState(initPaymentStatus);
+    
+    // Mettre à jour le statut de paiement lorsque les réservations changent
+    useEffect(() => {
+        setPaymentStatus(initPaymentStatus);
+    }, [reservations]);
 
     // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
     if (!user) {
         return <LoginPrompt />;
     }
 
-    // Filtrer les réservations en fonction du rôle de l'utilisateur
-    const displayedReservations = user.role === 'admin'
+    // Filtrer les réservations en fonction du rôle de l'utilisateur et du filtre de paiement
+    let displayedReservations = user.role === 'admin'
         ? reservations  // Afficher toutes les réservations pour l'admin
         : reservations.filter(res => res.userId === user.username);  // Filtrer pour l'utilisateur standard
+    
+    // Appliquer le filtre de paiement pour les administrateurs
+    if (user.role === 'admin' && paymentFilter !== 'all') {
+        displayedReservations = displayedReservations.filter(res => {
+            const isPaid = paymentStatus[res.id] === 'success' || res.isPaid;
+            return paymentFilter === 'paid' ? isPaid : !isPaid;
+        });
+    }
+
+    // Calculer le nombre de jours restants pour chaque réservation
+    const calculateDaysRemaining = (reservationDate) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normaliser l'heure à minuit
+        const matchDate = new Date(reservationDate);
+        matchDate.setHours(0, 0, 0, 0); // Normaliser l'heure à minuit
+        
+        // Différence en millisecondes convertie en jours
+        const diffTime = matchDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        return diffDays;
+    };
 
     const handleModifyClick = (reservation) => {
         setFormData({ ...reservation });
@@ -65,6 +108,7 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
             date: '',
             timeSlot: '',
             accepted: false,
+            rejected: false,
             userId: ''
         });
     };
@@ -75,6 +119,11 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
             ...formData,
             [name]: value
         });
+    };
+    
+    // Gérer le changement du filtre de paiement
+    const handleFilterChange = (e) => {
+        setPaymentFilter(e.target.value);
     };
 
     const handleSubmit = (e) => {
@@ -103,6 +152,25 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
         }, 5000);
     };
 
+    const handleReject = (id) => {
+        // Trouver la réservation
+        const reservation = reservations.find(res => res.id === id);
+        if (reservation) {
+            // Mettre à jour la réservation avec le statut rejeté
+            const updatedReservation = {
+                ...reservation,
+                rejected: true,
+                accepted: false
+            };
+            modifyReservation(updatedReservation);
+            
+            setConfirmationMessage('Réservation refusée avec succès.');
+            setTimeout(() => {
+                setConfirmationMessage('');
+            }, 5000);
+        }
+    };
+
     const handlePaymentClick = (reservation) => {
         setPaymentForm({
             ...paymentForm,
@@ -123,10 +191,31 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
     const handlePaymentSubmit = (e) => {
         e.preventDefault();
         const reservationId = paymentForm.reservationId;
+        
+        // Mettre à jour le statut local
         setPaymentStatus(prev => ({
             ...prev,
             [reservationId]: 'success'
         }));
+        
+        // Trouver la réservation concernée
+        const reservation = reservations.find(res => res.id === reservationId);
+        if (reservation) {
+            // Mettre à jour la réservation avec le statut payé
+            const updatedReservation = {
+                ...reservation,
+                isPaid: true
+            };
+            
+            // Appel de la fonction de modification
+            modifyReservation(updatedReservation);
+            
+            setConfirmationMessage('Paiement effectué avec succès.');
+            setTimeout(() => {
+                setConfirmationMessage('');
+            }, 5000);
+        }
+        
         setTimeout(() => {
             setIsPaymentModalOpen(false);
             setPaymentForm({
@@ -165,6 +254,23 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                     {deletionMessage}
                 </div>
             )}
+            
+            {/* Filtre pour les administrateurs */}
+            {user.role === 'admin' && (
+                <div className="admin-filter">
+                    <label htmlFor="payment-filter">Filtrer par statut de paiement:</label>
+                    <select 
+                        id="payment-filter" 
+                        value={paymentFilter} 
+                        onChange={handleFilterChange}
+                        className="payment-filter-select"
+                    >
+                        <option value="all">Toutes les réservations</option>
+                        <option value="paid">Réservations payées</option>
+                        <option value="unpaid">Réservations non payées</option>
+                    </select>
+                </div>
+            )}
 
             <table className="reservation-table">
                 <thead>
@@ -173,54 +279,96 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                         <th>Date</th>
                         <th>Plage Horaire</th>
                         {user.role === 'admin' && <th>Utilisateur</th>}
+                        {user.role === 'admin' && <th>Statut de Paiement</th>}
+                        {user.role === 'admin' && <th>Jours Restants</th>}
                         <th>Actions</th>
-                        <th>Paiement</th>
+                        {user.role !== 'admin' && <th>Paiement</th>}
                     </tr>
                 </thead>
                 <tbody>
                     {displayedReservations.length === 0 ? (
                         <tr>
-                            <td colSpan={user.role === 'admin' ? 6 : 5} className="no-reservations">
+                            <td colSpan={user.role === 'admin' ? 7 : 4} className="no-reservations">
                                 Aucune réservation disponible.
                             </td>
                         </tr>
                     ) : (
-                        displayedReservations.map(reservation => (
-                            <tr key={reservation.id} className={reservation.accepted ? 'accepted' : 'pending'}>
-                                <td>{reservation.name}</td>
-                                <td>{reservation.date}</td>
-                                <td>{reservation.timeSlot}</td>
-                                {user.role === 'admin' && <td>{reservation.userId || 'Non assigné'}</td>}
-                                <td className="actions">
-                                    <button onClick={() => handleModifyClick(reservation)} className="btn-modify">
-                                        <i className="fas fa-edit"></i> Modifier
-                                    </button>
-                                    <button onClick={() => handleDeleteClick(reservation.id)} className="btn">
-                                        <i className="fas fa-trash-alt"></i> Supprimer
-                                    </button>
-                                    {user.role === 'admin' && !reservation.accepted && (
-                                        <button onClick={() => handleAccept(reservation.id)} className="btn-modify">
-                                            <i className="fas fa-check"></i> Accepter
+                        displayedReservations.map(reservation => {
+                            const daysRemaining = calculateDaysRemaining(reservation.date);
+                            return (
+                                <tr key={reservation.id} className={
+                                    paymentStatus[reservation.id] === 'success' || reservation.isPaid
+                                        ? 'accepted' 
+                                        : 'pending'
+                                }>
+                                    <td>{reservation.name}</td>
+                                    <td>{reservation.date}</td>
+                                    <td>{reservation.timeSlot}</td>
+                                    {user.role === 'admin' && <td>{reservation.userId || 'Non assigné'}</td>}
+                                    {user.role === 'admin' && (
+                                        <td className="status-cell">
+                                            {paymentStatus[reservation.id] === 'success' || reservation.isPaid ? (
+                                                <div className="payment-success">
+                                                    <i className="fas fa-check-circle"></i> Payée
+                                                </div>
+                                            ) : (
+                                                <div className="status-rejected">
+                                                    <i className="fas fa-times-circle"></i> Non payée
+                                                </div>
+                                            )}
+                                        </td>
+                                    )}
+                                    {user.role === 'admin' && (
+                                        <td className="days-remaining-cell">
+                                            {daysRemaining < 0 ? (
+                                                <span className="days-past">
+                                                    <i className="fas fa-calendar-times"></i> Passé ({Math.abs(daysRemaining)} j)
+                                                </span>
+                                            ) : daysRemaining === 0 ? (
+                                                <span className="days-today">
+                                                    <i className="fas fa-calendar-day"></i> Aujourd'hui
+                                                </span>
+                                            ) : daysRemaining <= 3 ? (
+                                                <span className="days-soon">
+                                                    <i className="fas fa-calendar-alt"></i> {daysRemaining} jour{daysRemaining > 1 ? 's' : ''}
+                                                </span>
+                                            ) : (
+                                                <span className="days-normal">
+                                                    <i className="fas fa-calendar-alt"></i> {daysRemaining} jours
+                                                </span>
+                                            )}
+                                        </td>
+                                    )}
+                                    <td className="actions">
+                                        {user.role !== 'admin' && (
+                                            <button onClick={() => handleModifyClick(reservation)} className="btn-modify">
+                                                <i className="fas fa-edit"></i> Modifier
+                                            </button>
+                                        )}
+                                        <button onClick={() => handleDeleteClick(reservation.id)} className="btn">
+                                            <i className="fas fa-trash-alt"></i> Supprimer
                                         </button>
+                                    </td>
+                                    {user.role !== 'admin' && (
+                                        <td className="payment-cell">
+                                            {!paymentStatus[reservation.id] && !reservation.isPaid && (
+                                                <button
+                                                    onClick={() => handlePaymentClick(reservation)}
+                                                    className="btn-payment"
+                                                >
+                                                    <i className="fas fa-credit-card"></i> Payer
+                                                </button>
+                                            )}
+                                            {(paymentStatus[reservation.id] === 'success' || reservation.isPaid) && (
+                                                <span className="payment-success">
+                                                    <i className="fas fa-check-circle"></i> Paiement Réussi
+                                                </span>
+                                            )}
+                                        </td>
                                     )}
-                                </td>
-                                <td className="payment-cell">
-                                    {!paymentStatus[reservation.id] && (
-                                        <button
-                                            onClick={() => handlePaymentClick(reservation)}
-                                            className="btn-payment"
-                                        >
-                                            <i className="fas fa-credit-card"></i> Payer
-                                        </button>
-                                    )}
-                                    {paymentStatus[reservation.id] === 'success' && (
-                                        <span className="payment-success">
-                                            <i className="fas fa-check-circle"></i> Paiement Réussi
-                                        </span>
-                                    )}
-                                </td>
-                            </tr>
-                        ))
+                                </tr>
+                            );
+                        })
                     )}
                 </tbody>
             </table>
@@ -360,7 +508,7 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                                 <input
                                     type="text"
                                     name="amount"
-                                    value={`${paymentForm.amount} DT`}
+                                    value={`${paymentForm.amount} DH`}
                                     readOnly
                                     className="readonly-input"
                                 />

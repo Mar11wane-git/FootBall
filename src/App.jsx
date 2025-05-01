@@ -9,6 +9,7 @@ import Contact from "./Lwst/Contact";
 import Tournoi from './Lwst/Tournoi';
 import Login from './Lwst/Login';
 import LoginPrompt from './Lwst/LoginPrompt';
+import TournoiDetail from './Lwst/TournoiDetail';
 import "./lwst/lwst.css";
 
 function App() {
@@ -18,36 +19,92 @@ function App() {
   });
   const [user, setUser] = useState(null);
 
-  const terrains = [
-    {
-      id: 1,
-      photo: 'tr1.jpg',
-      Title: 'Terrain 1 - Gazon Synthétique',
-      description: 'Terrain de dernière génération avec gazon synthétique haute qualité. Parfait pour les matchs compétitifs.',
-      price: 200 // Prix en DH
-    },
-    {
-      id: 2,
-      photo: 'tr1.jpg',
-      Title: 'Terrain 2 - Gazon Naturel',
-      description: 'Profitez de l\'authenticité du gazon naturel pour vos matchs et entraînements.',
-      price: 250 // Prix en DH
-    },
-    {
-      id: 3,
-      photo: 'tr1.jpg',
-      Title: 'Terrain 3 - Gazon Hybride',
-      description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
-      price: 300 // Prix en DH
-    },
-    {
-      id: 4,
-      photo: 'tr1.jpg',
-      Title: 'Terrain 4 - Gazon Hybride',
-      description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
-      price: 350 // Prix en DH
+  const [terrains, setTerrains] = useState(() => {
+    const savedTerrains = localStorage.getItem('terrains');
+    if (savedTerrains) {
+      return JSON.parse(savedTerrains);
     }
-  ];
+    return [
+      {
+        id: 1,
+        photo: 'tr1.jpg',
+        Title: 'Terrain 1 - Gazon Synthétique',
+        description: 'Terrain de dernière génération avec gazon synthétique haute qualité. Parfait pour les matchs compétitifs.',
+        price: '150'
+      },
+      {
+        id: 2,
+        photo: 'tr1.jpg',
+        Title: 'Terrain 2 - Gazon Naturel',
+        description: 'Profitez de l\'authenticité du gazon naturel pour vos matchs et entraînements.',
+        price: '180'
+      },
+      {
+        id: 3,
+        photo: 'tr1.jpg',
+        Title: 'Terrain 3 - Gazon Hybride',
+        description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
+        price: '165'
+      },
+      {
+        id: 4,
+        photo: 'tr1.jpg',
+        Title: 'Terrain 4 - Gazon Hybride',
+        description: 'Un mélange parfait de gazon naturel et synthétique pour une expérience optimale.',
+        price: '165'
+      }
+    ];
+  });
+
+  const [tournois, setTournois] = useState(() => {
+    const saved = localStorage.getItem('tournois');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    return [
+      {
+        id: 1,
+        name: "Coupe de la Ville",
+        date: "2024-04-15",
+        maxTeams: 16,
+        registeredTeams: 8,
+        prizePool: "10000 DH",
+        description: "Tournoi annuel opposant les meilleures équipes",
+        format: "Élimination directe",
+        entryFee: "500 DH"
+      },
+      {
+        id: 2,
+        name: "Championnat Amateur",
+        date: "2024-05-01",
+        maxTeams: 12,
+        registeredTeams: 6,
+        prizePool: "5000 DH",
+        description: "Tournoi réservé aux équipes amateurs",
+        format: "Phase de groupes + Élimination directe",
+        entryFee: "300 DH"
+      },
+      {
+        id: 3,
+        name: "Tournoi Ramadan",
+        date: "2024-03-20",
+        maxTeams: 20,
+        registeredTeams: 12,
+        prizePool: "15000 DH",
+        description: "Grand tournoi nocturne pendant le mois de Ramadan",
+        format: "Phase de groupes + Élimination directe",
+        entryFee: "600 DH"
+      }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('terrains', JSON.stringify(terrains));
+  }, [terrains]);
+
+  useEffect(() => {
+    localStorage.setItem('tournois', JSON.stringify(tournois));
+  }, [tournois]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -106,6 +163,14 @@ function App() {
     localStorage.removeItem('user');
   };
 
+  const addTerrain = (newTerrain) => {
+    setTerrains(prevTerrains => [...prevTerrains, newTerrain]);
+  };
+
+  const deleteTerrain = (terrainId) => {
+    setTerrains(prevTerrains => prevTerrains.filter(terrain => terrain.id !== terrainId));
+  };
+
   return (
     <div className="app-container">
       {/* Vidéo en arrière-plan */}
@@ -122,13 +187,29 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/accueil" />} />
         <Route path="accueil" element={<Accueil user={user} />} />
-        <Route path="terrain" element={<Terrain user={user} addReservation={addReservation} reservations={reservations} terrains={terrains} />} />
-        <Route path="terrain/:id" element={<TerrainDetail user={user} terrains={terrains} addReservation={addReservation} reservations={reservations} />} />
+        <Route path="terrain" element={
+          <Terrain 
+            user={user} 
+            addReservation={addReservation} 
+            reservations={reservations} 
+            terrains={terrains}
+            addTerrain={addTerrain}
+            deleteTerrain={deleteTerrain}
+          />
+        } />
+        <Route path="terrain/:id" element={
+          <TerrainDetail 
+            user={user} 
+            terrains={terrains} 
+            addReservation={addReservation} 
+            reservations={reservations} 
+          />
+        } />
         <Route path="reservation" element={user ? <Reservation user={user} reservations={reservations} deleteReservation={deleteReservation} modifyReservation={modifyReservation} acceptReservation={acceptReservation} /> : <Navigate to="/login" />} />
         <Route path="contact" element={<Contact user={user} />} />
-        <Route path="tournoi" element={<Tournoi user={user} />} />
+        <Route path="tournoi" element={<Tournoi user={user} tournois={tournois} setTournois={setTournois} />} />
+        <Route path="tournoi/:id" element={<TournoiDetail user={user} tournois={tournois} setTournois={setTournois} />} />
         <Route path="login" element={<Login setUser={handleLogin} />} />
-
       </Routes>
     </div>
   );
