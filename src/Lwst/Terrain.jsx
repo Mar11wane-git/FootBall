@@ -316,7 +316,7 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
                             <div className="price">Prix: {e.price} DH</div>
                             <div className="terrain-actions">
                                 <Link to={`/terrain/${e.id}?price=${e.price}`}>
-                                    <button className='btnn'>
+                                    <button className='bton'>
                                         <i className="fas fa-eye"></i>  Détail
                                     </button>
                                 </Link>

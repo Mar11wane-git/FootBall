@@ -234,7 +234,7 @@ function TournoiDetail({ user, tournois, setTournois }) {
                         {teamsCount < tournoi.maxTeams ? (
                             <>
                                 <p>Pour participer à ce tournoi, veuillez retourner à la liste des tournois et cliquer sur "S'inscrire".</p>
-                                <Link to="/tournoi" className="btn-view-details">
+                                <Link to="/tournoi" className="Retour">
                                     <i className="fas fa-arrow-left"></i> Retour à la liste des tournois
                                 </Link>
                             </>

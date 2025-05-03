@@ -10,6 +10,7 @@ import Tournoi from './Lwst/Tournoi';
 import Login from './Lwst/Login';
 import LoginPrompt from './Lwst/LoginPrompt';
 import TournoiDetail from './Lwst/TournoiDetail';
+import Parametres from './Lwst/Parametres';
 import "./lwst/lwst.css";
 
 function App() {
@@ -210,6 +211,7 @@ function App() {
         <Route path="tournoi" element={<Tournoi user={user} tournois={tournois} setTournois={setTournois} />} />
         <Route path="tournoi/:id" element={<TournoiDetail user={user} tournois={tournois} setTournois={setTournois} />} />
         <Route path="login" element={<Login setUser={handleLogin} />} />
+        <Route path="parametres" element={user ? <Parametres user={user} setUser={setUser} /> : <Navigate to="/login" />} />
       </Routes>
     </div>
   );

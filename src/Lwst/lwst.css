@@ -179,12 +179,13 @@ h1 {
     text-align: center;
     max-width: 300px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: none;
 }
 
 .com1>div:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: none;
 }
 
 
@@ -720,10 +721,12 @@ td {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    transition: none;
 }
 
 .terrain:hover {
-    transform: translateY(-5px);
+    transform: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .terrain img {
@@ -851,54 +854,95 @@ td {
     background-color: #45a049;
 }
 
-.admin-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
-    width: 100%;
+:root {
+    --primary-blue: #2196F3;
+    --dark-blue: #1976D2;
+    --primary-green: #4CAF50;
+    --dark-green: #388E3C;
+    --primary-red: #f44336;
+    --dark-red: #d32f2f;
+    --white: #ffffff;
+    --shadow-light: rgba(0, 0, 0, 0.15);
+    --shadow-hover: rgba(0, 0, 0, 0.25);
 }
 
-.admin-actions button {
+/* Style générique pour tous les boutons */
+.btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px 0;
+    max-width: 360px;
+    padding: 12px 16px;
     border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
     cursor: pointer;
+    text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px var(--shadow-light);
+    background-size: 200% auto;
+    gap: 10px;
 }
 
-.admin-actions .btn-modify {
-    background: linear-gradient(45deg, #2196F3, #1976D2);
-}
-
-.admin-actions .btn-modify:hover {
-    background: linear-gradient(45deg, #1976D2, #2196F3);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.admin-actions .btn-delete {
-    background: linear-gradient(45deg, #f44336, #d32f2f);
-}
-
-.admin-actions .btn-delete:hover {
-    background: linear-gradient(45deg, #d32f2f, #f44336);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.admin-actions button i {
-    margin-right: 8px;
+/* Icône à gauche du texte */
+.btn i {
     font-size: 16px;
+    margin-right: 8px;
 }
+
+/* Effet au clic */
+.btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+/* Bouton Voir les détails */
+.btn-view-details {
+    background: linear-gradient(45deg, var(--primary-blue), var(--dark-blue));
+    margin: 16px auto 0;
+}
+
+.btn-view-details:hover {
+    background-position: right center;
+    box-shadow: 0 4px 10px var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* Conteneur des boutons admin */
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    width: 100%;
+}
+
+/* Bouton Modifier */
+.btn-modify {
+    background: linear-gradient(45deg, var(--primary-green), var(--dark-green));
+}
+
+.btn-modify:hover {
+    background-position: right center;
+    box-shadow: 0 4px 10px var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* Bouton Supprimer */
+.btn-delete {
+    background: linear-gradient(45deg, var(--primary-red), var(--dark-red));
+}
+
+.btn-delete:hover {
+    background-position: right center;
+    box-shadow: 0 4px 10px var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
 
 @media (max-width: 768px) {
     .admin-actions {
@@ -995,7 +1039,7 @@ td {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
-    height: 100%;
+    height: 90%;
 }
 
 .tournoi-card:hover {
@@ -1067,7 +1111,7 @@ td {
 }
 
 .btn-delete {
-    background-color: #f44336;
+    background-color: #ff0505;
     color: white;
     border: none;
     padding: 12px 0;
@@ -1279,18 +1323,6 @@ td {
 
 .status-rejected {
     display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #f44336;
-    font-weight: 600;
-    padding: 5px 10px;
-    background-color: rgba(244, 67, 54, 0.1);
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-.status-accepted i {
-    color: #4CAF50;
     font-size: 1.1rem;
 }
 
@@ -1610,6 +1642,30 @@ td {
     transition: all 0.25s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+.bton{
+    background-color: #4CAF50;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: white;
+    min-width: 100px;
+    margin: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.bton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(39, 215, 19, 0.3);
+}
+.bton i {
+    font-size: 0.85rem;
+    margin-right: 4px;
+    color: white;
+}
 
 .terrain-actions .btnn:hover,
 .terrain-actions .btnnn:hover {
@@ -1631,9 +1687,17 @@ td {
         font-size: 0.8rem;
         min-width: 90px;
     }
+    .bton {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+        min-width: 90px;
+    }
     
     .terrain-actions .btnn i,
     .terrain-actions .btnnn i {
+        font-size: 0.8rem;
+    }
+     .bton i {
         font-size: 0.8rem;
     }
 }
@@ -1968,30 +2032,8 @@ td {
     }
 }
 
-/* Style pour le bouton "Voir les détails" */
-.btn-view-details {
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    padding: 12px 0;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    width: 100%;
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
 
-.btn-view-details:hover {
-    background-color: #0b7dda;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+
 
 .tournoi-actions {
     display: flex;
@@ -2309,7 +2351,7 @@ td {
     
     .tournoi-actions-header {
         flex-direction: column;
-        width: 100%;
+    width: 100%;
     }
 }
 
@@ -2553,7 +2595,7 @@ td {
 
 .contact-form .form-group input,
 .contact-form .form-group textarea {
-    width: 100%;
+    width: 90%;
     padding: 15px;
     border: 1px solid rgba(76, 175, 80, 0.3);
     border-radius: 8px;
@@ -2577,7 +2619,7 @@ td {
 }
 
 .submit-btn {
-    width: 100%;
+    width: 95%;
     padding: 15px;
     background: linear-gradient(45deg, #4CAF50, #45a049);
     color: white;
@@ -3206,6 +3248,40 @@ td {
     .auth-switch {
         font-size: 0.9rem;
     }
+}
+.Retour {
+    background-image: linear-gradient(45deg, #18bce9, #03b3ff);  /* Vert dégradé */
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 15px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    background-size: 200% auto;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.Retour:hover {
+    background-position: right center;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.Retour:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.Retour i {
+    font-size: 16px;
 }
 
 /* ... rest of existing code ... */

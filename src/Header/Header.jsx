@@ -1,15 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Header.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Header({ user, logout }) {
     const navigate = useNavigate();
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+    const menuRef = useRef(null);
 
     const handleLogout = () => {
-        setIsLogoutModalOpen(false); // Ferme le modal avant de se déconnecter
+        setIsLogoutModalOpen(false);
+        setIsProfileMenuOpen(false);
         logout();
         navigate('/login');
+    };
+
+    // Fermer le menu quand on clique en dehors
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsProfileMenuOpen(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    // Fonction pour obtenir les initiales du nom d'utilisateur
+    const getInitials = (name) => {
+        return name.charAt(0).toUpperCase();
     };
 
     return (
@@ -26,12 +48,44 @@ function Header({ user, logout }) {
                 <Link to="/contact">Contact</Link>
             </div>
 
-            <div className="auth-button">
+            <div className="profile-menu" ref={menuRef}>
                 {user ? (
                     <>
-                        <button className="logout-button" onClick={() => setIsLogoutModalOpen(true)}>
-                            <i className="fas fa-sign-out-alt"></i> Se déconnecter
+                        <button 
+                            className="profile-button"
+                            onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                        >
+                            <div className="profile-avatar">
+                                {getInitials(user.username)}
+                            </div>
+                            <span className="profile-name">{user.username}</span>
+                            <i className={`fas fa-chevron-${isProfileMenuOpen ? 'up' : 'down'}`}></i>
                         </button>
+
+                        {isProfileMenuOpen && (
+                            <div className="profile-dropdown">
+                                <div className="profile-dropdown-header">
+                                    <h3>{user.username}</h3>
+                                    <p>{user.role === 'admin' ? 'Administrateur' : 'Utilisateur'}</p>
+                                </div>
+                                
+                                <Link to="/parametres" className="profile-dropdown-item">
+                                    <i className="fas fa-cog"></i>
+                                    Paramètres du compte
+                                </Link>
+                                
+                                <div className="profile-dropdown-divider"></div>
+                                
+                                <div 
+                                    className="profile-dropdown-item"
+                                    onClick={() => setIsLogoutModalOpen(true)}
+                                >
+                                    <i className="fas fa-sign-out-alt"></i>
+                                    Se déconnecter
+                                </div>
+                            </div>
+                        )}
+
                         {isLogoutModalOpen && (
                             <div className="modal">
                                 <div className="modal-content">

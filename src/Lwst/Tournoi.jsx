@@ -281,49 +281,47 @@ function Tournoi({ user, tournois, setTournois }) {
 
                         {user ? (
                             <div className="tournoi-actions">
-                                {tournoi.registered ? (
+                                {user.role !== 'admin' && (
                                     <>
-                                        <button
-                                            className="btn-unregister"
-                                            onClick={() => handleUnregister(tournoi.id)}
-                                        >
-                                            <i className="fas fa-user-minus"></i> Se désinscrire
-                                        </button>
-                                        <Link to={`/tournoi/${tournoi.id}`} className="btn-view-details">
-                                            <i className="fas fa-info-circle"></i> Voir les détails
-                                        </Link>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button
-                                            className="btn-register"
-                                            onClick={() => handleRegisterClick(tournoi)}
-                                            disabled={tournoi.teams && tournoi.teams.length >= tournoi.maxTeams}
-                                        >
-                                            <i className="fas fa-user-plus"></i> S'inscrire
-                                        </button>
-                                        <Link to={`/tournoi/${tournoi.id}`} className="btn-view-details">
-                                            <i className="fas fa-info-circle"></i> Voir les détails
-                                        </Link>
+                                        {tournoi.registered ? (
+                                            <button
+                                                className="btn-unregister"
+                                                onClick={() => handleUnregister(tournoi.id)}
+                                            >
+                                                <i className="fas fa-user-minus"></i> Se désinscrire
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="btn-register"
+                                                onClick={() => handleRegisterClick(tournoi)}
+                                                disabled={tournoi.teams && tournoi.teams.length >= tournoi.maxTeams}
+                                            >
+                                                <i className="fas fa-user-plus"></i> S'inscrire
+                                            </button>
+                                        )}
                                     </>
                                 )}
-                                
-                                {user.role === 'admin' && (
-                                    <div className="admin-actions">
-                                        <button
-                                            className="btn-modify"
-                                            onClick={() => handleEditClick(tournoi)}
-                                        >
-                                            <i className="fas fa-edit"></i> Modifier
-                                        </button>
-                                        <button
-                                            className="btn-delete"
-                                            onClick={() => handleDeleteTournoi(tournoi.id)}
-                                        >
-                                            <i className="fas fa-trash-alt"></i> Supprimer
-                                        </button>
-                                    </div>
-                                )}
+                              <Link to={`/tournoi/${tournoi.id}`} className="btn btn-view-details">
+    <i className="fas fa-info-circle"></i> Voir les détails
+</Link>
+
+{user.role === 'admin' && (
+    <div className="admin-actions">
+        <button
+            className="btn btn-modify"
+            onClick={() => handleEditClick(tournoi)}
+        >
+            <i className="fas fa-edit"></i> Modifier
+        </button>
+        <button
+            className="btn btn-delete"
+            onClick={() => handleDeleteTournoi(tournoi.id)}
+        >
+            <i className="fas fa-trash-alt"></i> Supprimer
+        </button>
+    </div>
+)}
+
                             </div>
                         ) : (
                             <>
@@ -437,20 +435,8 @@ function Tournoi({ user, tournois, setTournois }) {
                                     <option value="8">8 équipes</option>
                                     <option value="12">12 équipes</option>
                                     <option value="16">16 équipes</option>
-                                    <option value="20">20 équipes</option>
-                                    <option value="24">24 équipes</option>
-                                    <option value="32">32 équipes</option>
+                                    <option value="20">20 équipes</option>                                
                                 </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Équipes inscrites:</label>
-                                <input
-                                    type="number"
-                                    name="registeredTeams"
-                                    value={tournoiFormData.registeredTeams}
-                                    onChange={handleTournoiChange}
-                                    min="0"
-                                />
                             </div>
                             <div className="form-group">
                                 <label>Prix (Prize Pool):</label>
@@ -462,11 +448,11 @@ function Tournoi({ user, tournois, setTournois }) {
                                     className="form-select"
                                 >
                                     <option value="" disabled>Choisir le prize pool</option>
+                                    <option value="1000 DH">1000 DH</option>
+                                    <option value="2000 DH">2000 DH</option>
+                                    <option value="3000 DH">3000 DH</option>
+                                    <option value="4000 DH">4000 DH</option>
                                     <option value="5000 DH">5000 DH</option>
-                                    <option value="10000 DH">10000 DH</option>
-                                    <option value="15000 DH">15000 DH</option>
-                                    <option value="20000 DH">20000 DH</option>
-                                    <option value="25000 DH">25000 DH</option>
                                 </select>
                             </div>
                             <div className="form-group">
@@ -498,8 +484,8 @@ function Tournoi({ user, tournois, setTournois }) {
                                     <option value="300 DH">300 DH</option>
                                     <option value="500 DH">500 DH</option>
                                     <option value="600 DH">600 DH</option>
+                                    <option value="700 DH">700 DH</option>
                                     <option value="800 DH">800 DH</option>
-                                    <option value="1000 DH">1000 DH</option>
                                 </select>
                             </div>
                             <div className="form-group">
