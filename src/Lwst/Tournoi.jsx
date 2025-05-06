@@ -30,10 +30,22 @@ function Tournoi({ user, tournois, setTournois }) {
     });
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [deleteConfirmationId, setDeleteConfirmationId] = useState(null);
+    const [ratings, setRatings] = useState({});
 
     useEffect(() => {
         localStorage.setItem('registeredTeams', JSON.stringify(registeredTeams));
     }, [registeredTeams]);
+
+    const handleRating = (terrainId, rating) => {
+        if (!user) {
+            setShowLoginPrompt(true);
+            return;
+        }
+        setRatings(prev => ({
+            ...prev,
+            [terrainId]: rating
+        }));
+    };
 
     const handleRegisterClick = (tournoi) => {
         if (!user) {
