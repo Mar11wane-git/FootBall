@@ -19,6 +19,17 @@ function TerrainDetail({ addReservation, reservations, user, terrains }) {
         const saved = localStorage.getItem('terrainDetailReservations');
         return saved ? JSON.parse(saved) : [];
     });
+    const [ratings, setRatings] = useState(() => {
+        const saved = localStorage.getItem('terrainRatings');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    const villesMaroc = {
+        1: "Meknès",
+        2: "Marrakech",
+        3: "Casablanca",
+        4: "Rabat"
+    };
 
     // Chargement du terrain depuis les props
     useEffect(() => {
@@ -31,6 +42,33 @@ function TerrainDetail({ addReservation, reservations, user, terrains }) {
     useEffect(() => {
         localStorage.setItem('terrainDetailReservations', JSON.stringify(savedReservations));
     }, [savedReservations]);
+
+    useEffect(() => {
+        localStorage.setItem('terrainRatings', JSON.stringify(ratings));
+    }, [ratings]);
+
+    const handleRating = (rating) => {
+        setRatings(prev => ({
+            ...prev,
+            [terrain.id]: rating
+        }));
+    };
+
+    const renderStars = () => {
+        const currentRating = ratings[terrain.id] || 0;
+        return (
+            <div className="rating-stars">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <i
+                        key={star}
+                        className={`fas fa-star ${star <= currentRating ? 'active' : ''}`}
+                        onClick={() => handleRating(star)}
+                        title={`Noter ${star} étoile${star > 1 ? 's' : ''}`}
+                    />
+                ))}
+            </div>
+        );
+    };
 
     if (!terrain) {
         return (
@@ -124,9 +162,9 @@ function TerrainDetail({ addReservation, reservations, user, terrains }) {
             <div className="terrain-content">
                 <div className="terrain-image-container">
                     <img
-                        src={terrain.photo.startsWith('data:image') ? terrain.photo : 
-                            terrain.photo.startsWith('http') ? terrain.photo : 
-                            `/${terrain.photo}`}
+                        src={terrain.photo.startsWith('data:image') ? terrain.photo :
+                            terrain.photo.startsWith('http') ? terrain.photo :
+                                `/${terrain.photo}`}
                         alt={terrain.Title}
                         className="terrain-image"
                     />
@@ -149,8 +187,19 @@ function TerrainDetail({ addReservation, reservations, user, terrains }) {
                             <li><strong>Éclairage:</strong> Système LED</li>
                             <li><strong>Disponibilité:</strong> 9h00 - 22h00</li>
                             <li><strong>Prix:</strong> <span className="price">{terrain.price} DH/heure</span></li>
+                            <li className="location">
+                                <i className="fas fa-map-marker-alt"></i>
+                                <strong>Localisation:</strong> {villesMaroc[terrain.id] || 'Non spécifiée'}
+                            </li>
                         </ul>
                     </div>
+
+                    {user && (
+                        <div className="terrain-rating">
+                            <h2>Notez ce terrain</h2>
+                            {renderStars()}
+                        </div>
+                    )}
 
                     <div className="terrain-amenities">
                         <h2>Équipements</h2>

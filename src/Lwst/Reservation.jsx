@@ -423,10 +423,10 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                             )}
 
                             <div className="modal-actions">
-                                <button type="submit" className="btn-modify">
+                                <button type="submit" className="btnn">
                                     <i className="fas fa-check"></i> Enregistrer
                                 </button>
-                                <button type="button" className="btn" onClick={handleCloseEditModal}>
+                                <button type="button" className="btnnn" onClick={handleCloseEditModal}>
                                     <i className="fas fa-times"></i> Annuler
                                 </button>
                             </div>
@@ -440,10 +440,10 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                     <div className="modal-content">
                         <h2>Êtes-vous sûr de vouloir supprimer cette réservation ?</h2>
                         <div className="modal-actions">
-                            <button className="btn-modify" onClick={confirmDelete}>
+                            <button className="btnn" onClick={confirmDelete}>
                                 <i className="fas fa-check"></i> Confirmer
                             </button>
-                            <button className="btn" onClick={() => setIsDeleteModalOpen(false)}>
+                            <button className="btnnn" onClick={() => setIsDeleteModalOpen(false)}>
                                 <i className="fas fa-times"></i> Annuler
                             </button>
                         </div>
@@ -523,7 +523,7 @@ function Reservation({ reservations, deleteReservation, modifyReservation, accep
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn"
+                                    className="btnnn"
                                     onClick={() => {
                                         setIsPaymentModalOpen(false);
                                         setPaymentForm({

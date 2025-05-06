@@ -279,6 +279,17 @@ function Tournoi({ user, tournois, setTournois }) {
                             <p className="description">{tournoi.description}</p>
                         </div>
 
+                        <div className="rating-stars">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <i
+                                    key={star}
+                                    className={`fas fa-star ${star <= (ratings[tournoi.id] || 0) ? 'active' : ''}`}
+                                    onClick={() => handleRating(tournoi.id, star)}
+                                    title={`Noter ${star} étoile${star > 1 ? 's' : ''}`}
+                                />
+                            ))}
+                        </div>
+
                         {user ? (
                             <div className="tournoi-actions">
                                 {user.role !== 'admin' && (
@@ -301,27 +312,26 @@ function Tournoi({ user, tournois, setTournois }) {
                                         )}
                                     </>
                                 )}
-                              <Link to={`/tournoi/${tournoi.id}`} className="btn btn-view-details">
-    <i className="fas fa-info-circle"></i> Voir les détails
-</Link>
+                                <Link to={`/tournoi/${tournoi.id}`} className="btn btn-view-details">
+                                    <i className="fas fa-info-circle"></i> Voir les détails
+                                </Link>
 
-{user.role === 'admin' && (
-    <div className="admin-actions">
-        <button
-            className="btn btn-modify"
-            onClick={() => handleEditClick(tournoi)}
-        >
-            <i className="fas fa-edit"></i> Modifier
-        </button>
-        <button
-            className="btn btn-delete"
-            onClick={() => handleDeleteTournoi(tournoi.id)}
-        >
-            <i className="fas fa-trash-alt"></i> Supprimer
-        </button>
-    </div>
-)}
-
+                                {user.role === 'admin' && (
+                                    <div className="admin-actions">
+                                        <button
+                                            className="btn btn-modify"
+                                            onClick={() => handleEditClick(tournoi)}
+                                        >
+                                            <i className="fas fa-edit"></i> Modifier
+                                        </button>
+                                        <button
+                                            className="btn btn-delete"
+                                            onClick={() => handleDeleteTournoi(tournoi.id)}
+                                        >
+                                            <i className="fas fa-trash-alt"></i> Supprimer
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <>

@@ -37,7 +37,7 @@ function Header({ user, logout }) {
     return (
         <nav className="navbar">
             <div className="logo">
-                <Link to="/">LWST</Link>
+                <Link to="/">SportyTime</Link>
             </div>
 
             <div className="nav-links">

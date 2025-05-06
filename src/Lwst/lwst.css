@@ -110,58 +110,70 @@ h1 {
     width: 148px;
 }
 
-.btnn, .btnnn {
+.btnn,
+.btnnn,
+.bton {
     background: linear-gradient(45deg, #4CAF50, #45a049);
     color: white;
     border: none;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 400;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    min-width: 70px;
+    gap: 8px;
+    min-width: 120px;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin: 5px;
+    width: auto;
+    white-space: nowrap;
+    overflow: visible;
 }
 
 .btnnn {
     background: linear-gradient(45deg, #f44336, #d32f2f);
-    box-shadow: 0 1px 3px rgba(244, 67, 54, 0.2);
 }
 
-.btnn:hover, .btnnn:hover {
-    transform: translateY(-1px);
+.bton {
+    background: linear-gradient(45deg, #2196F3, #1976D2);
 }
 
-.btnn:hover {
-    background: linear-gradient(45deg, #45a049, #4CAF50);
-    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+.btnn:hover,
+.btnnn:hover,
+.bton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.btnnn:hover {
-    background: linear-gradient(45deg, #d32f2f, #f44336);
-    box-shadow: 0 2px 4px rgba(244, 67, 54, 0.3);
-}
-
-.btnn:active, .btnnn:active {
+.btnn:active,
+.btnnn:active,
+.bton:active {
     transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.btnn i, .btnnn i {
-    font-size: 0.75rem;
+.btnn i,
+.btnnn i,
+.bton i {
+    font-size: 1rem;
+    margin-right: 5px;
 }
 
+/* Responsive design pour les boutons */
 @media (max-width: 768px) {
-    .btnn, .btnnn {
-        padding: 3px 8px;
-        font-size: 0.7rem;
-        min-width: 60px;
+
+    .btnn,
+    .btnnn,
+    .bton {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        min-width: 100px;
     }
 }
 
@@ -309,7 +321,7 @@ h1 {
     .modal-actions {
         gap: 10px;
     }
-    
+
     .modal-actions button {
         padding: 5px 14px;
         font-size: 0.8rem;
@@ -404,6 +416,7 @@ h1 {
 }
 
 @media (max-width: 768px) {
+
     .btn-confirmer-suppression,
     .btn-ajt {
         padding: 8px 20px;
@@ -576,6 +589,7 @@ td {
     transform: translateY(-2px);
     /* Léger soulèvement */
 }
+
 .btn-modify {
     background-color: #10d40a;
     /* Rouge vif */
@@ -712,71 +726,85 @@ td {
 
 .terrain {
     width: 100%;
-    max-width: 300px;
-    height: 450px;
-    background-color: #000000;
-    border-radius: 10px;
+    max-width: 350px;
+    height: auto;
+    min-height: 500px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
-    transition: none;
+    margin: 20px auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(76, 175, 80, 0.2);
 }
 
 .terrain:hover {
-    transform: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
+    border-color: rgba(76, 175, 80, 0.4);
 }
 
 .terrain img {
     width: 100%;
-    height: 200px;
+    height: 250px;
     object-fit: cover;
     display: block;
+    border-bottom: 2px solid rgba(76, 175, 80, 0.3);
 }
 
 .terrain-content {
-    padding: 1rem;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
     align-items: center;
     text-align: center;
+    gap: 15px;
 }
 
 .terrain h3 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #7CFC00;
-    margin: 0.5rem 0;
+    margin: 0;
+    font-size: 1.4rem;
+    color: #4CAF50;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .terrain p {
     color: #e0e0e0;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    margin: 0.5rem 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    flex-grow: 1;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 }
 
 .terrain-price {
     font-weight: bold;
-    color: #7CFC00;
-    font-size: 1.1rem;
-    margin: 0.5rem 0;
+    color: #4CAF50;
+    font-size: 1.2rem;
+    margin: 10px 0;
+    padding: 8px 15px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
 .terrain-actions {
     margin-top: auto;
     width: 100%;
-    padding: 1rem;
+    padding: 15px;
     display: flex;
-    gap: 0.5rem;
+    gap: 10px;
     justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btnn {
@@ -825,12 +853,32 @@ td {
     }
 
     .terrain {
-        max-width: 250px;
-        height: 400px;
+        max-width: 300px;
+        min-height: 450px;
     }
 
     .terrain .im1 {
         height: 180px;
+    }
+
+    .terrain img {
+        height: 200px;
+    }
+
+    .terrain-content {
+        padding: 15px;
+    }
+
+    .terrain h3 {
+        font-size: 1.2rem;
+    }
+
+    .terrain p {
+        font-size: 0.9rem;
+    }
+
+    .terrain-price {
+        font-size: 1.1rem;
     }
 }
 
@@ -1054,7 +1102,8 @@ td {
     gap: 10px;
 }
 
-.btn-register, .btn-unregister {
+.btn-register,
+.btn-unregister {
     width: 100%;
 }
 
@@ -1273,7 +1322,7 @@ td {
     .modal-actions {
         gap: 10px;
     }
-    
+
     .modal-actions button {
         padding: 5px 14px;
         font-size: 0.8rem;
@@ -1441,13 +1490,13 @@ td {
         display: block;
         overflow-x: auto;
     }
-    
+
     .reservation-table th,
     .reservation-table td {
         padding: 10px 8px;
         font-size: 0.9rem;
     }
-    
+
     .btn-accept,
     .btn-modify,
     .btn {
@@ -1545,12 +1594,12 @@ td {
         align-items: flex-start;
         padding: 12px 15px;
     }
-    
+
     .admin-filter label {
         margin-bottom: 8px;
         margin-right: 0;
     }
-    
+
     .payment-filter-select {
         width: 100%;
         min-width: unset;
@@ -1610,7 +1659,10 @@ td {
     border-radius: 5px;
 }
 
-.days-past i, .days-today i, .days-soon i, .days-normal i {
+.days-past i,
+.days-today i,
+.days-soon i,
+.days-normal i {
     font-size: 1rem;
 }
 
@@ -1619,8 +1671,11 @@ td {
         padding: 4px 8px;
         font-size: 0.85rem;
     }
-    
-    .days-past i, .days-today i, .days-soon i, .days-normal i {
+
+    .days-past i,
+    .days-today i,
+    .days-soon i,
+    .days-normal i {
         font-size: 0.9rem;
     }
 }
@@ -1642,7 +1697,8 @@ td {
     transition: all 0.25s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-.bton{
+
+.bton {
     background-color: #4CAF50;
     padding: 8px 20px;
     font-size: 0.85rem;
@@ -1657,10 +1713,12 @@ td {
     transition: all 0.25s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 .bton:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 10px rgba(39, 215, 19, 0.3);
 }
+
 .bton i {
     font-size: 0.85rem;
     margin-right: 4px;
@@ -1681,23 +1739,26 @@ td {
 
 /* Responsive */
 @media (max-width: 768px) {
+
     .terrain-actions .btnn,
     .terrain-actions .btnnn {
         padding: 5px 10px;
         font-size: 0.8rem;
         min-width: 90px;
     }
+
     .bton {
         padding: 5px 10px;
         font-size: 0.8rem;
         min-width: 90px;
     }
-    
+
     .terrain-actions .btnn i,
     .terrain-actions .btnnn i {
         font-size: 0.8rem;
     }
-     .bton i {
+
+    .bton i {
         font-size: 0.8rem;
     }
 }
@@ -1720,6 +1781,7 @@ td {
 }
 
 @media (max-width: 768px) {
+
     .actions .btn-modify,
     .actions .btn {
         padding: 5px 10px;
@@ -1779,14 +1841,18 @@ td {
     margin-bottom: 40px;
 }
 
-.tournoi-detail-card, .rules-card {
+.tournoi-detail-card,
+.rules-card {
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.tournoi-detail-card h2, .rules-card h2, .teams-section h2, .bracket-section h2 {
+.tournoi-detail-card h2,
+.rules-card h2,
+.teams-section h2,
+.bracket-section h2 {
     color: #4CAF50;
     font-size: 1.5rem;
     margin-top: 0;
@@ -1840,7 +1906,8 @@ td {
     font-size: 1.1rem;
 }
 
-.teams-section, .bracket-section {
+.teams-section,
+.bracket-section {
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     padding: 20px;
@@ -1911,7 +1978,8 @@ td {
     color: white;
 }
 
-.no-teams, .bracket-placeholder {
+.no-teams,
+.bracket-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1923,13 +1991,16 @@ td {
     gap: 15px;
 }
 
-.no-teams i, .bracket-placeholder i, .tournoi-detail-loading i {
+.no-teams i,
+.bracket-placeholder i,
+.tournoi-detail-loading i {
     font-size: 3rem;
     color: #666;
     margin-bottom: 10px;
 }
 
-.registration-info, .register-section {
+.registration-info,
+.register-section {
     margin-top: 30px;
     text-align: center;
     padding: 20px;
@@ -1988,7 +2059,8 @@ td {
     transform: translateY(-2px);
 }
 
-.tournoi-detail-loading, .tournoi-detail-error {
+.tournoi-detail-loading,
+.tournoi-detail-error {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2008,23 +2080,23 @@ td {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     .teams-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
-    
+
     .tournoi-detail-header h1 {
         font-size: 1.8rem;
     }
-    
+
     .info-item {
         flex-direction: column;
     }
-    
+
     .info-label {
         margin-bottom: 5px;
     }
-    
+
     .team-header {
         flex-direction: column;
         align-items: flex-start;
@@ -2217,7 +2289,7 @@ td {
         font-size: 14px;
         padding: 8px 16px;
     }
-    
+
     .registration-status p {
         font-size: 16px;
     }
@@ -2260,7 +2332,7 @@ td {
         margin-left: 0;
         width: 100%;
     }
-    
+
     .tournoi-header {
         flex-direction: column;
     }
@@ -2348,10 +2420,10 @@ td {
         font-size: 12px;
         padding: 8px 12px;
     }
-    
+
     .tournoi-actions-header {
         flex-direction: column;
-    width: 100%;
+        width: 100%;
     }
 }
 
@@ -2439,8 +2511,10 @@ td {
     .admin-actions {
         flex-direction: column;
     }
-    
-    .btn-modifier, .btn-supprimer, .btn-details {
+
+    .btn-modifier,
+    .btn-supprimer,
+    .btn-details {
         width: 100%;
         padding: 8px 12px;
         font-size: 0.85rem;
@@ -2688,6 +2762,7 @@ td {
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -2700,37 +2775,37 @@ td {
         padding: 15px;
         margin: 30px 15px;
     }
-    
+
     .info-section {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     .contact-form {
         padding: 25px;
     }
-    
+
     .contact-info h1 {
         font-size: 2rem;
     }
-    
+
     .contact-form h2 {
         font-size: 1.7rem;
     }
-    
+
     .info-item {
         padding: 25px 15px;
     }
-    
+
     .info-item i {
         font-size: 2rem;
     }
-    
+
     .contact-form .form-group input,
     .contact-form .form-group textarea {
         padding: 12px;
     }
-    
+
     .submit-btn {
         padding: 12px;
         font-size: 1rem;
@@ -2991,6 +3066,7 @@ td {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -3026,7 +3102,7 @@ td {
     gap: 24px;
 }
 
-.login-container form > div {
+.login-container form>div {
     position: relative;
 }
 
@@ -3249,8 +3325,10 @@ td {
         font-size: 0.9rem;
     }
 }
+
 .Retour {
-    background-image: linear-gradient(45deg, #18bce9, #03b3ff);  /* Vert dégradé */
+    background-image: linear-gradient(45deg, #18bce9, #03b3ff);
+    /* Vert dégradé */
     color: #fff;
     border: none;
     padding: 12px 20px;
@@ -3285,3 +3363,363 @@ td {
 }
 
 /* ... rest of existing code ... */
+
+/* Styles pour la barre de recherche et le filtre par ville */
+.search-container {
+    position: relative;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.search-filters {
+    display: flex;
+    gap: 80px;
+    align-items: center;
+}
+
+.search-input-container {
+    position: relative;
+    flex: 1;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 20px 12px 40px;
+    border: 2px solid #4CAF50;
+    border-radius: 25px;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #45a049;
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4CAF50;
+    font-size: 18px;
+}
+
+.city-select {
+    padding: 12px 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 25px;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234CAF50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 45px;
+    min-width: 180px;
+}
+
+.city-select:hover {
+    border-color: #45a049;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.city-select:focus {
+    outline: none;
+    border-color: #45a049;
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.city-select option {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 12px;
+}
+
+@media (max-width: 768px) {
+    .search-filters {
+        flex-direction: column;
+        gap: 35px;
+    }
+
+    .search-input-container,
+    .city-select {
+        width: 100%;
+    }
+
+    .search-container {
+        max-width: 90%;
+        margin: 15px auto;
+    }
+
+    .search-input,
+    .city-select {
+        padding: 10px 15px 10px 35px;
+        font-size: 14px;
+    }
+
+    .search-icon {
+        left: 12px;
+        font-size: 16px;
+    }
+}
+
+/* ... existing code ... */
+
+/* --- Amélioration du formulaire de réservation de terrain --- */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 10px;
+}
+
+.modal-content form label {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    letter-spacing: 0.2px;
+}
+
+.modal-content form input,
+.modal-content form select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-bottom: 2px;
+}
+
+.modal-content form input:focus,
+.modal-content form select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background: rgba(255, 255, 255, 0.13);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.13);
+}
+
+.modal-content form select option {
+    background: #222;
+    color: #fff;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.modal-actions .btn-ajt {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.13);
+}
+
+.modal-actions .btn-ajt:hover {
+    background: linear-gradient(45deg, #45a049, #4CAF50);
+    transform: translateY(-2px);
+}
+
+.modal-actions .btn-annuler {
+    background: linear-gradient(45deg, #f44336, #d32f2f);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.13);
+}
+
+.modal-actions .btn-annuler:hover {
+    background: linear-gradient(45deg, #d32f2f, #f44336);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .modal-content form {
+        gap: 12px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-actions .btn-ajt,
+    .modal-actions .btn-annuler {
+        width: 100%;
+        padding: 12px 0;
+        font-size: 0.98rem;
+    }
+}
+
+/* --- Fin amélioration formulaire réservation --- */
+
+/* ... existing code ... */
+
+/* Styles pour le système de notation */
+.terrain-rating {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    margin: 10px 0;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.terrain-rating span {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.rating-stars {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rating-stars i {
+    font-size: 1.2rem;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 5px;
+}
+
+.rating-stars i:hover,
+.rating-stars i.active {
+    color: #ffd700;
+    transform: scale(1.1);
+}
+
+/* Style pour les étoiles sélectionnées et leurs précédentes */
+.rating-stars i.active,
+.rating-stars i.active~i {
+    color: #ffd700;
+}
+
+/* Style pour les étoiles non sélectionnées */
+.rating-stars i:not(.active) {
+    color: #666;
+}
+
+.rating-average {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    padding: 8px 12px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.rating-average i {
+    color: #ffd700;
+    font-size: 1rem;
+}
+
+.rating-average span {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+/* Animation pour les étoiles */
+@keyframes starPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.rating-stars i:hover {
+    animation: starPulse 0.5s ease-in-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .terrain-rating {
+        padding: 10px;
+    }
+
+    .rating-stars i {
+        font-size: 1rem;
+        padding: 3px;
+    }
+
+    .rating-average {
+        padding: 6px 10px;
+    }
+
+    .rating-average span {
+        font-size: 0.8rem;
+    }
+}
+
+/* ... existing code ... */
+.rating-stars {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.rating-stars i {
+    font-size: 1.5rem;
+    color: #bdc3c7; /* Default star color */
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.rating-stars i.active {
+    color: #f1c40f; /* Active star color */
+    text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+}
+
+.rating-stars i:hover {
+    color: #f1c40f; /* Hover star color */
+    transform: scale(1.2);
+}

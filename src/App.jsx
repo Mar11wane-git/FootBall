@@ -189,21 +189,21 @@ function App() {
         <Route path="/" element={<Navigate to="/accueil" />} />
         <Route path="accueil" element={<Accueil user={user} />} />
         <Route path="terrain" element={
-          <Terrain 
-            user={user} 
-            addReservation={addReservation} 
-            reservations={reservations} 
+          <Terrain
+            user={user}
+            addReservation={addReservation}
+            reservations={reservations}
             terrains={terrains}
             addTerrain={addTerrain}
             deleteTerrain={deleteTerrain}
           />
         } />
         <Route path="terrain/:id" element={
-          <TerrainDetail 
-            user={user} 
-            terrains={terrains} 
-            addReservation={addReservation} 
-            reservations={reservations} 
+          <TerrainDetail
+            user={user}
+            terrains={terrains}
+            addReservation={addReservation}
+            reservations={reservations}
           />
         } />
         <Route path="reservation" element={user ? <Reservation user={user} reservations={reservations} deleteReservation={deleteReservation} modifyReservation={modifyReservation} acceptReservation={acceptReservation} /> : <Navigate to="/login" />} />

@@ -24,7 +24,8 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
         title: '',
         description: '',
         price: '',
-        photo: null
+        photo: null,
+        ville: ''
     });
 
     const [previewImage, setPreviewImage] = useState(null);
@@ -35,6 +36,20 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [terrainToDelete, setTerrainToDelete] = useState(null);
 
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCity, setSelectedCity] = useState('all');
+    const [ratings, setRatings] = useState(() => {
+        const saved = localStorage.getItem('terrainRatings');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    const villesMaroc = {
+        1: "Meknès",
+        2: "Marrakech",
+        3: "Casablanca",
+        4: "Rabat"
+    };
+
     useEffect(() => {
         localStorage.setItem('registeredTerrains', JSON.stringify(registeredTerrains));
     }, [registeredTerrains]);
@@ -42,6 +57,10 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
     useEffect(() => {
         localStorage.setItem('terrains', JSON.stringify(terrains));
     }, [terrains]);
+
+    useEffect(() => {
+        localStorage.setItem('terrainRatings', JSON.stringify(ratings));
+    }, [ratings]);
 
     const handleReserveClick = (terrainId) => {
         if (!user) {
@@ -149,13 +168,14 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
             photo: newTerrain.photo || 'tr1.jpg',
             Title: newTerrain.title,
             description: newTerrain.description,
-            price: newTerrain.price
+            price: newTerrain.price,
+            ville: newTerrain.ville
         };
 
         addTerrain(newTerrainData);
 
         // Réinitialiser le formulaire
-        setNewTerrain({ title: '', description: '', price: '', photo: null });
+        setNewTerrain({ title: '', description: '', price: '', photo: null, ville: '' });
         setPreviewImage(null);
         setConfirmationMessage('Le nouveau terrain a été ajouté avec succès!');
         setShowAddTerrainForm(false);
@@ -216,11 +236,81 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
     // Vérifier si l'utilisateur est un admin
     const isAdmin = user && user.role === 'admin';
 
+    // Fonction pour filtrer les terrains
+    const filteredTerrains = terrains.filter(terrain => {
+        const matchesSearch = terrain.Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            terrain.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCity =
+            selectedCity === 'all' ||
+            terrain.ville === selectedCity ||
+            villesMaroc[terrain.id] === selectedCity;
+        return matchesSearch && matchesCity;
+    });
+
+    const handleRating = (terrainId, rating) => {
+        if (!user) {
+            setShowLoginPrompt(true);
+            return;
+        }
+        setRatings(prev => ({
+            ...prev,
+            [terrainId]: rating
+        }));
+    };
+
+    const renderStars = (terrainId) => {
+        const currentRating = ratings[terrainId] || 0;
+        return (
+            <div className="rating-stars">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <i
+                        key={star}
+                        className={`fas fa-star ${star <= currentRating ? 'active' : ''}`}
+                        onClick={() => handleRating(terrainId, star)}
+                        title={`Noter ${star} étoile${star > 1 ? 's' : ''}`}
+                    />
+                ))}
+            </div>
+        );
+    };
+
+    // Liste unique de toutes les villes (mapping + ajoutées)
+    const allVilles = Array.from(new Set([
+        ...Object.values(villesMaroc),
+        ...terrains.map(t => t.ville).filter(Boolean)
+    ]));
+
     return (
         <div>
             {showLoginPrompt && <LoginPrompt />}
 
             <h1>Terrains Disponibles</h1>
+
+            {/* Barre de recherche et filtre par ville */}
+            <div className="search-container">
+                <div className="search-filters">
+                    <div className="search-input-container">
+                        <input
+                            type="text"
+                            placeholder="Rechercher un terrain..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                        />
+                        <i className="fas fa-search search-icon"></i>
+                    </div>
+                    <select
+                        value={selectedCity}
+                        onChange={(e) => setSelectedCity(e.target.value)}
+                        className="city-select"
+                    >
+                        <option value="all">Toutes les villes</option>
+                        {allVilles.map((ville, index) => (
+                            <option key={index} value={ville}>{ville}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
 
             {/* Section Admin pour ajouter des terrains */}
             {isAdmin && (
@@ -272,6 +362,20 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
                                         />
                                     </div>
                                     <div className="form-group">
+                                        <label>Ville:</label>
+                                        <select
+                                            name="ville"
+                                            value={newTerrain.ville}
+                                            onChange={handleNewTerrainChange}
+                                            required
+                                        >
+                                            <option value="">Choisir une ville</option>
+                                            {Object.values(villesMaroc).map((ville, index) => (
+                                                <option key={index} value={ville}>{ville}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
                                         <label>Image du terrain:</label>
                                         <input
                                             type="file"
@@ -307,13 +411,21 @@ function Terrain({ addReservation, reservations, user, terrains, addTerrain, del
             )}
 
             <div className="container">
-                {terrains.map((e) => (
+                {filteredTerrains.map((e) => (
                     <div key={e.id} className="terrain">
                         <img src={e.photo} alt={e.Title} className='im1' />
                         <div className="terrain-content">
                             <h3>{e.Title}</h3>
                             <p>{e.description}</p>
                             <div className="price">Prix: {e.price} DH</div>
+                            <div className="location">
+                                <i className="fas fa-map-marker-alt"></i>
+                                {e.ville || villesMaroc[e.id] || 'Non spécifiée'}
+                            </div>
+                            <div className="terrain-rating">
+                                <span>Notez ce terrain:</span>
+                                {renderStars(e.id)}
+                            </div>
                             <div className="terrain-actions">
                                 <Link to={`/terrain/${e.id}?price=${e.price}`}>
                                     <button className='bton'>
